@@ -1,0 +1,55 @@
+{
+	"name": "${localWorkspaceFolderBasename}",
+	"workspaceFolder": "/workspace",
+	"remoteUser": "vscode",
+	
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/node:1": {}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"biomejs.biome",
+				"GitHub.copilot",
+				"GitHub.vscode-pull-request-github",
+				"ms-azuretools.vscode-docker",
+				"streetsidesoftware.code-spell-checker"
+			],
+			"settings": {
+				"cSpell.words": [
+					"devcontainers",
+					"biomejs"
+				],
+				"autoOpenWorkspace.enableAutoOpenAlwaysFirst": true,
+				"biome.lspBin": "/workspace/frontend/node_modules/@biomejs/biome/bin/biome",
+				"editor.formatOnSave": true,
+				"editor.defaultFormatter": "biomejs.biome",
+				"[typescript]": {
+					"editor.defaultFormatter": "biomejs.biome",
+					"editor.formatOnSave": true,
+					"editor.codeActionsOnSave": {
+						"quickfix.biome": "always"
+					}
+				}
+			}
+		}
+	}
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
