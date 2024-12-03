@@ -15,6 +15,8 @@
 				"biomejs.biome",
 				"GitHub.copilot",
 				"GitHub.vscode-pull-request-github",
+				"GitHub.vscode-github-actions",
+				"mhutchie.git-graph",
 				"ms-azuretools.vscode-docker",
 				"streetsidesoftware.code-spell-checker"
 			],
