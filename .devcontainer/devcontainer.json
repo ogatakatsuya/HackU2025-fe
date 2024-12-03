@@ -2,7 +2,7 @@
 	"name": "${localWorkspaceFolderBasename}",
 	"workspaceFolder": "/workspaces",
 	"remoteUser": "vscode",
-	
+
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {},
@@ -21,11 +21,7 @@
 				"streetsidesoftware.code-spell-checker"
 			],
 			"settings": {
-				"cSpell.words": [
-					"devcontainers",
-					"biomejs",
-					"mhutchie"
-				],
+				"cSpell.words": ["devcontainers", "biomejs", "mhutchie", "emuni"],
 				"autoOpenWorkspace.enableAutoOpenAlwaysFirst": true,
 				"editor.formatOnSave": true,
 				"editor.defaultFormatter": "biomejs.biome",
