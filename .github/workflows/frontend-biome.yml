@@ -14,4 +14,4 @@ jobs:
           version: latest
 
       - name: Run Biome
-        run: cd frontend && biome --version && biome ci src/
+        run: biome --version && biome ci src/
