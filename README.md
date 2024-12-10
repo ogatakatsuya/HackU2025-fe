@@ -1,4 +1,4 @@
-# pjt-dw-front
+# template_nextjs
 ## 概要
 
 ### Gitの運用ルール
