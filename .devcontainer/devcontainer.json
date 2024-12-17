@@ -10,6 +10,8 @@
 		"ghcr.io/devcontainers/features/docker-in-docker": {}
 	},
 
+	"postAttachCommand": "pnpm install",
+
 	"customizations": {
 		"vscode": {
 			"extensions": [
