@@ -1,13 +1,16 @@
 {
 	"name": "${localWorkspaceFolderBasename}",
-	"workspaceFolder": "/workspaces",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"remoteUser": "vscode",
 
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/node:1": {}
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker": {}
 	},
+
+	"postAttachCommand": "pnpm install",
 
 	"customizations": {
 		"vscode": {
@@ -25,6 +28,7 @@
 				"autoOpenWorkspace.enableAutoOpenAlwaysFirst": true,
 				"editor.formatOnSave": true,
 				"editor.defaultFormatter": "biomejs.biome",
+				"biome.lspBin": "node_modules/@biomejs/biome/bin/biome",
 				"[typescript]": {
 					"editor.defaultFormatter": "biomejs.biome",
 					"editor.formatOnSave": true,

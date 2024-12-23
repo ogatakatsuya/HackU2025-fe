@@ -1,4 +1,4 @@
-# pjt-dw-front
+# template_nextjs
 ## 概要
 
 ### Gitの運用ルール
@@ -16,25 +16,21 @@
 ### セットアップ
 #### 1. リポジトリをクローン
 ```bash
-git clone git@github.com:emuni-kyoto/pjt-dw-front.git
+git clone git@github.com:emuni-kyoto/template_nextjs.git
 ```
 
 #### 2. VSCodeのDevContainerで開く
 
-#### 3. Biome-extension用biomeをダウンロード
-- 右下に出るポップアップより`Download Biome`をクリック
-- バージョン一覧より`latest`を選択
-
-#### 4. リポジトリを信頼
+#### 3. リポジトリを信頼
 - 左側ソース管理タブより`Manage Unsafe Repositories`をクリック
 - 「安全とマークして開くリポジトリを選択してください」と表示されるので、当該リポジトリを選択
 
-#### 5. パッケージをインストール
+#### 4. パッケージをインストール(自動実行)
 ```bash
 pnpm install
 ```
 
-#### 6. 環境変数設定
+#### 5. 環境変数設定
 ```bash
 cp .env.example .env
 code .env
