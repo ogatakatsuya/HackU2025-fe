@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 export const AccountButton = () => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

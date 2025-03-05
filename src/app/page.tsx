@@ -1,6 +1,6 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountButton from "@/components/AccountButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 
 export default function Home() {
 	return (
