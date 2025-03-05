@@ -113,6 +113,9 @@ function Page() {
 			password2: confirmPassword,
 		}).then(({ data, status }) => {
 			if (status !== 201) {
+				if (data.email) alert(data.email);
+				if (data.password1) alert(data.password1);
+				if (data.password2) alert(data.password2);
 				router.push("/signup");
 				return;
 			}
