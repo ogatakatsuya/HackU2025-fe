@@ -1,5 +1,7 @@
 "use client";
 
+import { createUser } from "@/api/client";
+import { saveUserTokenToCookie } from "@/lib/token";
 import {
 	Box,
 	Button,
@@ -58,10 +60,13 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 function Page() {
+	const [email, setEmail] = React.useState("");
 	const [emailError, setEmailError] = React.useState(false);
 	const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+	const [password, setPassword] = React.useState("");
 	const [passwordError, setPasswordError] = React.useState(false);
 	const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+	const [confirmPassword, setConfirmPassword] = React.useState("");
 	const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
 	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
 		React.useState("");
@@ -69,15 +74,9 @@ function Page() {
 	const router = useRouter();
 
 	const validateInputs = () => {
-		const email = document.getElementById("email") as HTMLInputElement;
-		const password = document.getElementById("password") as HTMLInputElement;
-		const confirmPassword = document.getElementById(
-			"confirm-password",
-		) as HTMLInputElement;
-
 		let isValid = true;
 
-		if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+		if (!email || !/\S+@\S+\.\S+/.test(email)) {
 			setEmailError(true);
 			setEmailErrorMessage("有効なメールアドレスを入力してください");
 			isValid = false;
@@ -86,7 +85,7 @@ function Page() {
 			setEmailErrorMessage("");
 		}
 
-		if (!password.value || password.value.length < 6) {
+		if (!password || password.length < 6) {
 			setPasswordError(true);
 			setPasswordErrorMessage("パスワードは6文字以上で入力してください");
 			isValid = false;
@@ -95,7 +94,7 @@ function Page() {
 			setPasswordErrorMessage("");
 		}
 
-		if (!confirmPassword.value || confirmPassword.value !== password.value) {
+		if (!confirmPassword || confirmPassword !== password) {
 			setConfirmPasswordError(true);
 			setConfirmPasswordErrorMessage("パスワードが一致しません");
 			isValid = false;
@@ -107,12 +106,20 @@ function Page() {
 		return isValid;
 	};
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		if (emailError || passwordError || confirmPasswordError) {
-			event.preventDefault();
+	const handleSignup = () => {
+		createUser({
+			email: email,
+			password1: password,
+			password2: confirmPassword,
+		}).then(({ data, status }) => {
+			if (status !== 201) {
+				router.push("/signup");
+				return;
+			}
+			saveUserTokenToCookie(data.access);
+			router.push("/");
 			return;
-		}
-		const data = new FormData(event.currentTarget);
+		});
 	};
 
 	return (
@@ -121,11 +128,7 @@ function Page() {
 				<Typography component="h1" variant="h4">
 					サインアップ
 				</Typography>
-				<Box
-					component="form"
-					onSubmit={handleSubmit}
-					sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-				>
+				<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 					<FormControl>
 						<FormLabel htmlFor="email">メールアドレス</FormLabel>
 						<TextField
@@ -136,6 +139,8 @@ function Page() {
 							name="email"
 							autoComplete="email"
 							variant="outlined"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
 							error={emailError}
 							helperText={emailErrorMessage}
 							color={emailError ? "error" : "primary"}
@@ -152,6 +157,8 @@ function Page() {
 							id="password"
 							autoComplete="new-password"
 							variant="outlined"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
 							error={passwordError}
 							helperText={passwordErrorMessage}
 							color={passwordError ? "error" : "primary"}
@@ -168,6 +175,8 @@ function Page() {
 							id="confirm-password"
 							autoComplete="current-password"
 							variant="outlined"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
 							error={confirmPasswordError}
 							helperText={confirmPasswordErrorMessage}
 							color={confirmPasswordError ? "error" : "primary"}
@@ -177,7 +186,7 @@ function Page() {
 						type="submit"
 						fullWidth
 						variant="contained"
-						onClick={validateInputs}
+						onClick={() => validateInputs() && handleSignup()}
 					>
 						サインアップ
 					</Button>
