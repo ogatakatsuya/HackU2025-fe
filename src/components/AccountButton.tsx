@@ -1,10 +1,10 @@
 "use client";
 
+import type { User } from "@/api/schemas/user";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
-import type { User } from "@/api/schemas/user";
 
 type AccountButtonProps = {
 	user?: User | null;
