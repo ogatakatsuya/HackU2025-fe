@@ -2,6 +2,7 @@
 
 import { createUser } from "@/api/client";
 import { useAppStateContext } from "@/components/Context";
+import { PageLayout } from "@/components/Layout";
 import {
 	Box,
 	Button,
@@ -201,4 +202,4 @@ function Page() {
 	);
 }
 
-export default Page;
+export default PageLayout({ requireLogin: false, children: Page });
