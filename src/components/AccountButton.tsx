@@ -32,7 +32,9 @@ export const AccountButton = ({ user }: AccountButtonProps) => {
 				<AccountCircleIcon fontSize="large" />
 			</IconButton>
 			{user ? (
-				<></>
+				<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+					<MenuItem onClick={() => router.push("/logout")}>ログアウト</MenuItem>
+				</Menu>
 			) : (
 				<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
 					<MenuItem onClick={() => router.push("/login")}>ログイン</MenuItem>

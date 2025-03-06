@@ -13,3 +13,7 @@ export const saveUserTokenToCookie = (token: string) => {
 export const findUserTokenFromCookie = () => {
 	return Cookies.get(userTokenCookieKey);
 };
+
+export const removeUserToken = () => {
+	return Cookies.remove(userTokenCookieKey);
+};

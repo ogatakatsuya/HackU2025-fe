@@ -68,3 +68,16 @@ export const loginUser = async (
 		credentials: "include",
 	});
 };
+
+export const getLogoutUserUrl = () => {
+	return "auth/logout/";
+};
+
+export const logoutUser = async (options?: RequestInit) => {
+	return fetch2(getLogoutUserUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		credentials: "include",
+	});
+};
