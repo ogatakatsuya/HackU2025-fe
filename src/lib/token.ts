@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
+import Cookies from "js-cookie";
+
+const userTokenCookieKey = "token";
 
 export const saveUserTokenToCookie = (token: string) => {
-	const response = new NextResponse();
-	response.cookies.set("token", token, {
+	return Cookies.set(userTokenCookieKey, token, {
 		path: "/",
-		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
-		sameSite: "lax",
+		sameSite: "Lax",
 	});
-	return response;
+};
+
+export const findUserTokenFromCookie = () => {
+	return Cookies.get(userTokenCookieKey);
 };

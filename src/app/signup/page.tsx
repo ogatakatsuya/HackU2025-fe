@@ -1,7 +1,7 @@
 "use client";
 
 import { createUser } from "@/api/client";
-import { saveUserTokenToCookie } from "@/lib/token";
+import { useAppStateContext } from "@/components/Context";
 import {
 	Box,
 	Button,
@@ -60,6 +60,8 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 function Page() {
+	const { setCtxToken } = useAppStateContext();
+
 	const [email, setEmail] = React.useState("");
 	const [emailError, setEmailError] = React.useState(false);
 	const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -119,7 +121,7 @@ function Page() {
 				router.push("/signup");
 				return;
 			}
-			saveUserTokenToCookie(data.access);
+			setCtxToken(data.access);
 			router.push("/");
 			return;
 		});
