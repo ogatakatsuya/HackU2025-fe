@@ -4,8 +4,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
+import type { User } from "@/api/schemas/user";
 
-export const AccountButton = () => {
+type AccountButtonProps = {
+	user?: User | null;
+};
+
+export const AccountButton = ({ user }: AccountButtonProps) => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const router = useRouter();
@@ -26,9 +31,16 @@ export const AccountButton = () => {
 			>
 				<AccountCircleIcon fontSize="large" />
 			</IconButton>
-			<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-				<MenuItem onClick={() => router.push("/signup")}>サインアップ</MenuItem>
-			</Menu>
+			{user ? (
+				<></>
+			) : (
+				<Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+					<MenuItem onClick={() => router.push("/login")}>ログイン</MenuItem>
+					<MenuItem onClick={() => router.push("/signup")}>
+						サインアップ
+					</MenuItem>
+				</Menu>
+			)}
 		</div>
 	);
 };

@@ -25,7 +25,7 @@ export default function Home() {
 						<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 							おもえも(仮)
 						</Typography>
-						<AccountButton />
+						<AccountButton user={user} />
 					</Toolbar>
 				</AppBar>
 			</Box>

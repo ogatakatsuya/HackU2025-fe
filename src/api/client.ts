@@ -1,5 +1,6 @@
 import { fetch2 } from "./custom";
 import type { CreateUserReq } from "./schemas/createUserReq";
+import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
 
@@ -42,5 +43,28 @@ export const findUser = async (
 	return fetch2<Promise<findUserResponse>>(getFindUserUrl(), {
 		...options,
 		method: "GET",
+	});
+};
+
+export type loginUserResponse = {
+	data: UserResp;
+	status: number;
+	headers: Headers;
+};
+
+export const getLoginUserUrl = () => {
+	return "auth/login/";
+};
+
+export const loginUser = async (
+	loginUserReq: LoginUserReq,
+	options?: RequestInit,
+): Promise<loginUserResponse> => {
+	return fetch2<Promise<loginUserResponse>>(getLoginUserUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(loginUserReq),
+		credentials: "include",
 	});
 };
