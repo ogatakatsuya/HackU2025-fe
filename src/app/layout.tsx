@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { AppContextProvider } from "@/components/Context";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -29,7 +28,7 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<AppContextProvider requireLogin={false}>{children}</AppContextProvider>
+				{children}
 			</body>
 		</html>
 	);

@@ -2,7 +2,7 @@
 
 import { findUser } from "@/api/client";
 import type { User } from "@/api/schemas/user";
-import { findUserTokenFromCookie, saveUserTokenToCookie } from "@/lib/token";
+import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -54,8 +54,6 @@ export const AppContextProvider = ({
 				if (requireLogin) router.push("/login");
 				return;
 			}
-
-			saveUserTokenToCookie(token);
 
 			setAppState((prev) => ({
 				...prev,

@@ -2,6 +2,7 @@
 
 import { createUser } from "@/api/client";
 import { useAppStateContext } from "@/components/Context";
+import { PageLayout } from "@/components/Layout";
 import {
 	Box,
 	Button,
@@ -113,18 +114,22 @@ function Page() {
 			email: email,
 			password1: password,
 			password2: confirmPassword,
-		}).then(({ data, status }) => {
-			if (status !== 201) {
-				if (data.email) alert(data.email);
-				if (data.password1) alert(data.password1);
-				if (data.password2) alert(data.password2);
-				router.push("/signup");
+		})
+			.then(({ data, status }) => {
+				if (status !== 201) {
+					if (data.email) alert(data.email);
+					if (data.password1) alert(data.password1);
+					if (data.password2) alert(data.password2);
+					router.push("/signup");
+					return;
+				}
+				setCtxToken(data.access);
+				router.push("/login");
 				return;
-			}
-			setCtxToken(data.access);
-			router.push("/");
-			return;
-		});
+			})
+			.catch(() => {
+				alert("内部サーバーエラーが発生しました");
+			});
 	};
 
 	return (
@@ -201,4 +206,4 @@ function Page() {
 	);
 }
 
-export default Page;
+export default PageLayout({ requireLogin: false, children: Page });

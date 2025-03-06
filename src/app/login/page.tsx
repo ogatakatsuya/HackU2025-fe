@@ -2,6 +2,7 @@
 
 import { loginUser } from "@/api/client";
 import { useAppStateContext } from "@/components/Context";
+import { PageLayout } from "@/components/Layout";
 import {
 	Box,
 	Button,
@@ -103,6 +104,7 @@ function Page() {
 			if (status !== 200) {
 				if (data.email) alert(data.email);
 				if (data.password) alert(data.password);
+				if (data.non_field_errors) alert(data.non_field_errors);
 				router.push("/login");
 				return;
 			}
@@ -168,4 +170,4 @@ function Page() {
 	);
 }
 
-export default Page;
+export default PageLayout({ requireLogin: false, children: Page });

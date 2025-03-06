@@ -2,10 +2,11 @@
 
 import AccountButton from "@/components/AccountButton";
 import { useAppStateContext } from "@/components/Context";
+import { PageLayout } from "@/components/Layout";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 
-export default function Home() {
+function Page() {
 	const { user } = useAppStateContext();
 
 	return (
@@ -35,3 +36,5 @@ export default function Home() {
 		</>
 	);
 }
+
+export default PageLayout({ requireLogin: false, children: Page });
