@@ -1,6 +1,6 @@
 "use client";
 
-import { createUser } from "@/api/client";
+import { loginUser } from "@/api/client";
 import { useAppStateContext } from "@/components/Context";
 import {
 	Box,
@@ -68,10 +68,6 @@ function Page() {
 	const [password, setPassword] = React.useState("");
 	const [passwordError, setPasswordError] = React.useState(false);
 	const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-	const [confirmPassword, setConfirmPassword] = React.useState("");
-	const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
-	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
-		React.useState("");
 
 	const router = useRouter();
 
@@ -96,29 +92,18 @@ function Page() {
 			setPasswordErrorMessage("");
 		}
 
-		if (!confirmPassword || confirmPassword !== password) {
-			setConfirmPasswordError(true);
-			setConfirmPasswordErrorMessage("パスワードが一致しません");
-			isValid = false;
-		} else {
-			setConfirmPasswordError(false);
-			setConfirmPasswordErrorMessage("");
-		}
-
 		return isValid;
 	};
 
 	const handleSignup = () => {
-		createUser({
+		loginUser({
 			email: email,
-			password1: password,
-			password2: confirmPassword,
+			password: password,
 		}).then(({ data, status }) => {
-			if (status !== 201) {
+			if (status !== 200) {
 				if (data.email) alert(data.email);
-				if (data.password1) alert(data.password1);
-				if (data.password2) alert(data.password2);
-				router.push("/signup");
+				if (data.password) alert(data.password);
+				router.push("/login");
 				return;
 			}
 			setCtxToken(data.access);
@@ -131,7 +116,7 @@ function Page() {
 		<SignUpContainer direction="column" justifyContent="space-between">
 			<Card variant="outlined">
 				<Typography component="h1" variant="h4">
-					サインアップ
+					ログイン
 				</Typography>
 				<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 					<FormControl>
@@ -156,7 +141,7 @@ function Page() {
 						<TextField
 							required
 							fullWidth
-							name="password1"
+							name="password"
 							placeholder="●●●●●●"
 							type="password"
 							id="password"
@@ -169,31 +154,13 @@ function Page() {
 							color={passwordError ? "error" : "primary"}
 						/>
 					</FormControl>
-					<FormControl>
-						<FormLabel htmlFor="confirm-password">パスワードを確認</FormLabel>
-						<TextField
-							required
-							fullWidth
-							name="password2"
-							placeholder="●●●●●●"
-							type="password"
-							id="confirm-password"
-							autoComplete="current-password"
-							variant="outlined"
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
-							error={confirmPasswordError}
-							helperText={confirmPasswordErrorMessage}
-							color={confirmPasswordError ? "error" : "primary"}
-						/>
-					</FormControl>
 					<Button
 						type="submit"
 						fullWidth
 						variant="contained"
 						onClick={() => validateInputs() && handleSignup()}
 					>
-						サインアップ
+						ログイン
 					</Button>
 				</Box>
 			</Card>
