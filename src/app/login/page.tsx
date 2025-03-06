@@ -104,6 +104,7 @@ function Page() {
 			if (status !== 200) {
 				if (data.email) alert(data.email);
 				if (data.password) alert(data.password);
+				if (data.non_field_errors) alert(data.non_field_errors);
 				router.push("/login");
 				return;
 			}

@@ -23,7 +23,6 @@ export const createUser = async (
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		body: JSON.stringify(createUserReq),
-		credentials: "include",
 	});
 };
 
