@@ -1,6 +1,7 @@
 "use client";
 
 import AccountButton from "@/components/AccountButton";
+import Calendar from "@/components/Calendar";
 import { useAppStateContext } from "@/components/Context";
 import { PageLayout } from "@/components/Layout";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -31,7 +32,7 @@ function Page() {
 				</AppBar>
 			</Box>
 			<Box mt={10}>
-				<Typography>email: {user ? user.email : undefined}</Typography>
+				<Calendar />
 			</Box>
 		</>
 	);
