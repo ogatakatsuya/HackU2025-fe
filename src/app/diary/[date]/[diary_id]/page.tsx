@@ -18,7 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function Page({ params }: { params: { diary_id: string } }) {
+function Page({ params }: { params: Promise<{ diary_id: string }> }) {
 	const [diaryId, setDiaryId] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const router = useRouter();

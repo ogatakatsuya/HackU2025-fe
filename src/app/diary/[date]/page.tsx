@@ -15,7 +15,7 @@ import {
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import { useEffect, useState } from "react";
 
-function Page({ params }: { params: { date: string } }) {
+function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 
