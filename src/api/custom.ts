@@ -9,3 +9,11 @@ export const fetch2 = async <T>(
 	const data = await response.json();
 	return { status: response.status, data, headers: response.headers } as T;
 };
+
+export const commonHeader = ({ token }: { token?: string }) => {
+	return {
+		...{
+			Authorization: token ? `Bearer ${token}` : undefined,
+		},
+	} as HeadersInit;
+};
