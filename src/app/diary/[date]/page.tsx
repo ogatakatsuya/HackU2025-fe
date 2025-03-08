@@ -35,11 +35,36 @@ function Page({ params }: { params: { date: string } }) {
 				<Typography component="h1" variant="h4">
 					{date ? date : undefined}
 				</Typography>
-				<Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-					<DiaryCard
-						image="/next.svg"
-						content="content content content content content content content content content content content content content content"
-					/>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+						mt: 2,
+						gap: 2,
+						flexWrap: "wrap",
+						width: "100%",
+					}}
+				>
+					{date && (
+						<>
+							{/* DEBUG */}
+							<Box width={300}>
+								<DiaryCard
+									id="example-id"
+									image="/next.svg"
+									content="content content content content content content content content content content content content content content"
+									date={date}
+								/>
+							</Box>
+							<Box width={300}>
+								<DiaryCard
+									id="example-id"
+									content="content content content content content content content content content content content content content content"
+									date={date}
+								/>
+							</Box>
+						</>
+					)}
 				</Box>
 			</Box>
 			<SpeedDial
