@@ -1,5 +1,6 @@
 "use client";
 
+import CloseIcon from "@mui/icons-material/Close";
 import {
 	Button,
 	Card,
@@ -11,7 +12,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 
 type DiaryFormProps = {
