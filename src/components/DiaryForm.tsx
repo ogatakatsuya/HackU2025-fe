@@ -79,7 +79,7 @@ export const DiaryForm = ({ img, cont, handleClose }: DiaryFormProps) => {
 					<CardMedia
 						component="img"
 						image={image}
-						sx={{ objectFit: "contain" }}
+						sx={{ maxHeight: 360, objectFit: "contain" }}
 					/>
 				) : (
 					<Typography>Upload Image</Typography>
