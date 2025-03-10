@@ -1,6 +1,6 @@
 "use client";
 
-import { createDiary } from "@/api/client";
+import { createDiary, updateDiary } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -22,6 +22,7 @@ import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
 
 type DiaryFormProps = {
+	id?: string;
 	img?: string;
 	ttl?: string;
 	cont?: string;
@@ -30,6 +31,7 @@ type DiaryFormProps = {
 };
 
 export const DiaryForm = ({
+	id,
 	img,
 	ttl,
 	cont,
@@ -107,17 +109,32 @@ export const DiaryForm = ({
 		const token = findUserTokenFromCookie();
 		if (!token) return;
 
-		createDiary(
-			{
-				title: title,
-				content: content,
-				date: `${date}-${time}`,
-				image: imageFileBase64,
-			},
-			{ headers: { ...commonHeader({ token: token }) } },
-		).then(({ status }) => {
-			if (status === 201 || status === 200) router.refresh();
-		});
+		if (id) {
+			updateDiary(
+				{
+					id: id,
+					title: title,
+					content: content,
+					date: `${date}-${time}`,
+					image: imageFileBase64,
+				},
+				{ headers: { ...commonHeader({ token: token }) } },
+			).then(({ status }) => {
+				if (status === 200) router.refresh();
+			});
+		} else {
+			createDiary(
+				{
+					title: title,
+					content: content,
+					date: `${date}-${time}`,
+					image: imageFileBase64,
+				},
+				{ headers: { ...commonHeader({ token: token }) } },
+			).then(({ status }) => {
+				if (status === 201) router.refresh();
+			});
+		}
 	};
 
 	return (

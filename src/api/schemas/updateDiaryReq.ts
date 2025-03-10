@@ -1,4 +1,5 @@
-export type CreateDiaryReq = {
+export type UpdateDiaryReq = {
+	id: string;
 	title: string;
 	content: string;
 	date: string;

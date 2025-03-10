@@ -3,6 +3,7 @@ import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
 import type { LoginUserReq } from "./schemas/loginUserReq";
+import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
 
@@ -124,6 +125,31 @@ export const findDiaries = async (
 		{
 			...options,
 			method: "GET",
+		},
+	);
+};
+
+export type updateDiaryResponse = {
+	data: Diary;
+	status: number;
+	headers: Headers;
+};
+
+export const getUpdateDiaryUrl = () => {
+	return "api/diary/";
+};
+
+export const updateDiary = async (
+	updateDiaryReq: UpdateDiaryReq,
+	options?: RequestInit,
+): Promise<updateDiaryResponse> => {
+	return fetch2<Promise<updateDiaryResponse>>(
+		`${getUpdateDiaryUrl()}${updateDiaryReq.id}/`,
+		{
+			...options,
+			method: "PATCH",
+			headers: { "Content-Type": "application/json", ...options?.headers },
+			body: JSON.stringify(updateDiaryReq),
 		},
 	);
 };
