@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { useAppStateContext } from "./Context";
 import { findUserTokenFromCookie } from "@/lib/token";
+import { useRouter } from "next/navigation";
 
 type DiaryFormProps = {
 	img?: string;
@@ -47,6 +48,7 @@ export const DiaryForm = ({
 	const [contentErrorMessage, setContentErrorMessage] = useState("");
 	const [fileLoading, setFileLoading] = useState(false);
 	const [imageFileBase64, setImageFileBase64] = useState("");
+	const router = useRouter();
 
 	const readFile = (file: File, setFileBase64: (base64: string) => void) => {
 		setFileLoading(true);
@@ -114,7 +116,7 @@ export const DiaryForm = ({
 			},
 			{ headers: { ...commonHeader({ token: token }) } },
 		).then(({ status }) => {
-			if (status === 201) handleClose();
+			if (status === 201 || status === 200) router.refresh();
 		});
 	};
 
