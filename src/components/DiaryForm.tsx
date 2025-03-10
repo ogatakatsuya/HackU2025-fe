@@ -16,7 +16,7 @@ import {
 	Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStateContext } from "./Context";
 import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
@@ -51,6 +51,18 @@ export const DiaryForm = ({
 	const [fileLoading, setFileLoading] = useState(false);
 	const [imageFileBase64, setImageFileBase64] = useState("");
 	const router = useRouter();
+
+	useEffect(() => {
+		if (!img || img !== image) return;
+		fetch(img).then((res) => {
+			res.blob().then((blob) => {
+				readFile(
+					new File([blob], new URL(img).pathname, { type: blob.type }),
+					setImageFileBase64,
+				);
+			});
+		});
+	}, [img, image]);
 
 	const readFile = (file: File, setFileBase64: (base64: string) => void) => {
 		setFileLoading(true);
