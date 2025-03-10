@@ -24,10 +24,17 @@ type DiaryFormProps = {
 	img?: string;
 	ttl?: string;
 	cont?: string;
+	date: string;
 	handleClose: () => void;
 };
 
-export const DiaryForm = ({ img, ttl, cont, handleClose }: DiaryFormProps) => {
+export const DiaryForm = ({
+	img,
+	ttl,
+	cont,
+	date,
+	handleClose,
+}: DiaryFormProps) => {
 	const [image, setImage] = useState(img);
 	const [time, setTime] = useState("");
 	const [timeError, setTimeError] = useState(false);
@@ -102,7 +109,7 @@ export const DiaryForm = ({ img, ttl, cont, handleClose }: DiaryFormProps) => {
 			{
 				title: title,
 				content: content,
-				date: dayjs().format(`YYYY-MM-DD-${time}`),
+				date: `${date}-${time}`,
 				image: imageFileBase64,
 			},
 			{ headers: { ...commonHeader({ token: token }) } },

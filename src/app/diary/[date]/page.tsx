@@ -84,9 +84,11 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 				/>
 				<SpeedDialAction icon={<SmartToyIcon />} title="予定生成" />
 			</SpeedDial>
-			<Modal open={open} onClose={() => setOpen(false)}>
-				<DiaryForm handleClose={() => setOpen(false)} />
-			</Modal>
+			{date && (
+				<Modal open={open} onClose={() => setOpen(false)}>
+					<DiaryForm date={date} handleClose={() => setOpen(false)} />
+				</Modal>
+			)}
 		</>
 	);
 }

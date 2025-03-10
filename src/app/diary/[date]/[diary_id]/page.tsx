@@ -28,6 +28,7 @@ function Page({
 
 	// DEBUG
 	const image = "/next.svg";
+	const title = "title";
 	const content =
 		"content content content content content content content content content content content content content content";
 
@@ -82,13 +83,17 @@ function Page({
 					)}
 				</Card>
 			</Box>
-			<Modal open={open} onClose={() => setOpen(false)}>
-				<DiaryForm
-					img={image}
-					cont={content}
-					handleClose={() => setOpen(false)}
-				/>
-			</Modal>
+			{date && (
+				<Modal open={open} onClose={() => setOpen(false)}>
+					<DiaryForm
+						img={image}
+						ttl={title}
+						cont={content}
+						date={date}
+						handleClose={() => setOpen(false)}
+					/>
+				</Modal>
+			)}
 		</>
 	);
 }
