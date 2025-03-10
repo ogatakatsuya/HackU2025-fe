@@ -120,7 +120,10 @@ export const DiaryForm = ({
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ status }) => {
-				if (status === 200) router.refresh();
+				if (status === 200) {
+					router.refresh();
+					handleClose();
+				}
 			});
 		} else {
 			createDiary(
@@ -132,7 +135,10 @@ export const DiaryForm = ({
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ status }) => {
-				if (status === 201) router.refresh();
+				if (status === 201) {
+					router.refresh();
+					handleClose();
+				}
 			});
 		}
 	};
