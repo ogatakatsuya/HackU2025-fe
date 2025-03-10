@@ -1,6 +1,7 @@
 "use client";
 
 import { findDiaries } from "@/api/client";
+import { commonHeader } from "@/api/custom";
 import type { Diary } from "@/api/schemas/diary";
 import DiaryForm from "@/components/DiaryForm";
 import Header from "@/components/Header";
@@ -38,7 +39,9 @@ function Page({
 
 			const token = findUserTokenFromCookie();
 			if (!token || !date) return;
-			findDiaries(date).then(({ data, status }) => {
+			findDiaries(date, {
+				headers: { ...commonHeader({ token: token }) },
+			}).then(({ data, status }) => {
 				if (status === 200) {
 					data.map((d) => {
 						if (d.id === resolvedParams.diary_id) setDiary(d);
