@@ -1,5 +1,8 @@
 "use client";
 
+import { deleteDiary } from "@/api/client";
+import { commonHeader } from "@/api/custom";
+import { findUserTokenFromCookie } from "@/lib/token";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
@@ -69,7 +72,13 @@ export const DiaryCard = ({
 				<IconButton onClick={() => router.push(`/diary/${date}/${id}`)}>
 					<VisibilityIcon />
 				</IconButton>
-				<IconButton>
+				<IconButton
+					onClick={() => {
+						const token = findUserTokenFromCookie();
+						deleteDiary(id, { headers: { ...commonHeader({ token: token }) } });
+						router.push(`/diary/${date}`);
+					}}
+				>
 					<DeleteIcon />
 				</IconButton>
 			</CardActions>

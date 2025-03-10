@@ -1,6 +1,6 @@
 "use client";
 
-import { findDiaries } from "@/api/client";
+import { deleteDiary, findDiaries } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import type { Diary } from "@/api/schemas/diary";
 import DiaryForm from "@/components/DiaryForm";
@@ -68,7 +68,16 @@ function Page({
 						<IconButton onClick={() => setOpen(true)}>
 							<EditIcon />
 						</IconButton>
-						<IconButton>
+						<IconButton
+							onClick={() => {
+								if (!diary) return;
+								const token = findUserTokenFromCookie();
+								deleteDiary(diary.id, {
+									headers: { ...commonHeader({ token: token }) },
+								});
+								router.push(`/diary/${diary.date}`);
+							}}
+						>
 							<DeleteIcon />
 						</IconButton>
 					</CardActions>

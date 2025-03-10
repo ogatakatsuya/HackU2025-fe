@@ -45,6 +45,7 @@ export const findUser = async (
 	return fetch2<Promise<findUserResponse>>(getFindUserUrl(), {
 		...options,
 		method: "GET",
+		headers: { ...options?.headers },
 	});
 };
 
@@ -125,6 +126,7 @@ export const findDiaries = async (
 		{
 			...options,
 			method: "GET",
+			headers: { ...options?.headers },
 		},
 	);
 };
@@ -152,4 +154,16 @@ export const updateDiary = async (
 			body: JSON.stringify(updateDiaryReq),
 		},
 	);
+};
+
+export const getDeleteDiaryUrl = () => {
+	return "api/diary/";
+};
+
+export const deleteDiary = async (diary_id: string, options?: RequestInit) => {
+	return fetch2(`${getDeleteDiaryUrl()}${diary_id}/`, {
+		...options,
+		method: "DELETE",
+		headers: { ...options?.headers },
+	});
 };
