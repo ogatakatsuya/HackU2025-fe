@@ -30,14 +30,14 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 			setDate(resolvedParams.date);
 
 			const token = findUserTokenFromCookie();
-			if (!token) return;
-			findDiaries(dayjs().format("YYYY-MM-DD")).then(({ data, status }) => {
+			if (!token || !date) return;
+			findDiaries(date).then(({ data, status }) => {
 				if (status === 200) setDiaries(data);
 			});
 		};
 
 		fetchData();
-	}, [params]);
+	}, [params, date]);
 
 	return (
 		<>
