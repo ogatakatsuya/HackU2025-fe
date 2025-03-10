@@ -103,7 +103,7 @@ export const DiaryForm = ({ img, ttl, cont, handleClose }: DiaryFormProps) => {
 				title: title,
 				content: content,
 				date: dayjs().format(`YYYY-MM-DD-${time}`),
-				image: imageFileBase64 === "" ? undefined : imageFileBase64,
+				image: imageFileBase64,
 			},
 			{ headers: { ...commonHeader({ token: token }) } },
 		).then(({ status }) => {
