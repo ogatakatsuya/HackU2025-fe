@@ -18,7 +18,10 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function Page({ params }: { params: Promise<{ diary_id: string }> }) {
+function Page({
+	params,
+}: { params: Promise<{ date: string; diary_id: string }> }) {
+	const [date, setDate] = useState<string | null>(null);
 	const [diaryId, setDiaryId] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const router = useRouter();
@@ -32,6 +35,8 @@ function Page({ params }: { params: Promise<{ diary_id: string }> }) {
 		const fetchData = async () => {
 			const resolvedParams = await params;
 			setDiaryId(resolvedParams.diary_id);
+			setDate(resolvedParams.date);
+			console.log(resolvedParams.date);
 		};
 
 		fetchData();

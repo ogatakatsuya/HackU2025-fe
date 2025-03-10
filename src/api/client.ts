@@ -1,5 +1,7 @@
 import { fetch2 } from "./custom";
+import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
+import type { Diary } from "./schemas/diary";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
@@ -78,5 +80,27 @@ export const logoutUser = async (options?: RequestInit) => {
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		credentials: "include",
+	});
+};
+
+export type createDiaryResponse = {
+	data: Diary;
+	status: number;
+	headers: Headers;
+};
+
+export const getCreateDiaryUrl = () => {
+	return "api/diary/";
+};
+
+export const createDiary = async (
+	createDiaryReq: CreateDiaryReq,
+	options?: RequestInit,
+): Promise<createDiaryResponse> => {
+	return fetch2<Promise<createDiaryResponse>>(getCreateDiaryUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createDiaryReq),
 	});
 };
