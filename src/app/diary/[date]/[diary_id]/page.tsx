@@ -106,6 +106,7 @@ function Page({
 			{diary && (
 				<Modal open={open} onClose={() => setOpen(false)}>
 					<DiaryForm
+						id={diary.id}
 						img={diary.image}
 						ttl={diary.title}
 						cont={diary.content}
