@@ -1,7 +1,10 @@
 "use client";
 
+import { findDiaries } from "@/api/client";
+import type { Diary } from "@/api/schemas/diary";
 import DiaryForm from "@/components/DiaryForm";
 import Header from "@/components/Header";
+import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,27 +24,31 @@ import { useEffect, useState } from "react";
 function Page({
 	params,
 }: { params: Promise<{ date: string; diary_id: string }> }) {
+	const [diary, setDiary] = useState<Diary | null>(null);
 	const [date, setDate] = useState<string | null>(null);
 	const [diaryId, setDiaryId] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const router = useRouter();
-
-	// DEBUG
-	const image = "/next.svg";
-	const title = "title";
-	const content =
-		"content content content content content content content content content content content content content content";
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
 			setDiaryId(resolvedParams.diary_id);
 			setDate(resolvedParams.date);
-			console.log(resolvedParams.date);
+
+			const token = findUserTokenFromCookie();
+			if (!token || !date) return;
+			findDiaries(date).then(({ data, status }) => {
+				if (status === 200) {
+					data.map((d) => {
+						if (d.id === resolvedParams.diary_id) setDiary(d);
+					});
+				}
+			});
 		};
 
 		fetchData();
-	}, [params]);
+	}, [params, date]);
 
 	return (
 		<>
@@ -62,10 +69,14 @@ function Page({
 							<DeleteIcon />
 						</IconButton>
 					</CardActions>
-					{diaryId === "example-id" ? (
+					{diary ? (
 						<>
-							{image ? (
-								<CardMedia component="img" image={image} />
+							{diary.image ? (
+								<CardMedia
+									component="img"
+									image={diary.image}
+									sx={{ maxHeight: 360, objectFit: "contain" }}
+								/>
 							) : (
 								<Box
 									height={140}
@@ -76,20 +87,26 @@ function Page({
 									<Typography>No Image</Typography>
 								</Box>
 							)}
-							<CardContent>{content}</CardContent>
+							<CardContent>
+								<Typography variant="h4">{diary.title}</Typography>
+								<Typography variant="body2" pb={1}>
+									{diary.date}
+								</Typography>
+								<Typography variant="body1">{diary.content}</Typography>
+							</CardContent>
 						</>
 					) : (
 						<Typography textAlign="center">日記が存在しません</Typography>
 					)}
 				</Card>
 			</Box>
-			{date && (
+			{diary && (
 				<Modal open={open} onClose={() => setOpen(false)}>
 					<DiaryForm
-						img={image}
-						ttl={title}
-						cont={content}
-						date={date}
+						img={diary.image}
+						ttl={diary.title}
+						cont={diary.content}
+						date={diary.date.slice(-5)}
 						handleClose={() => setOpen(false)}
 					/>
 				</Modal>
