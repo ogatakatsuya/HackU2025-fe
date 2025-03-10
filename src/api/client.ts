@@ -104,3 +104,26 @@ export const createDiary = async (
 		body: JSON.stringify(createDiaryReq),
 	});
 };
+
+export type findDiariesResponse = {
+	data: Diary[];
+	status: number;
+	headers: Headers;
+};
+
+export const getFindDiariesUrl = () => {
+	return "api/diary/";
+};
+
+export const findDiaries = async (
+	date?: string,
+	options?: RequestInit,
+): Promise<findDiariesResponse> => {
+	return fetch2<Promise<findDiariesResponse>>(
+		getFindDiariesUrl() + (date && `${date}/`),
+		{
+			...options,
+			method: "GET",
+		},
+	);
+};

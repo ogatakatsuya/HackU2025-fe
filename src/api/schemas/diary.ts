@@ -3,5 +3,5 @@ export interface Diary {
 	title: string;
 	content: string;
 	date: string;
-	image: string;
+	image?: string;
 }
