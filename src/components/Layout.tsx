@@ -1,4 +1,5 @@
 import { AppContextProvider } from "./Context";
+import Header from "./Header";
 
 export const PageLayout =
 	({
@@ -9,6 +10,7 @@ export const PageLayout =
 		return (
 			<>
 				<AppContextProvider requireLogin={requireLogin}>
+					<Header />
 					<Page />
 				</AppContextProvider>
 			</>

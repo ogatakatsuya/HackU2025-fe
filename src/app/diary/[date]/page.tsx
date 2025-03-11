@@ -45,7 +45,6 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 
 	return (
 		<>
-			<Header />
 			<Box sx={{ textAlign: "center", mt: 10 }}>
 				<Typography component="h1" variant="h4">
 					{date ? date : undefined}
