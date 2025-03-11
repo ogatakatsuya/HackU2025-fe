@@ -1,8 +1,9 @@
 "use client";
 
-import { loginUser } from "@/api/client";
+import { findUser, loginUser } from "@/api/client";
 import { useAppStateContext } from "@/components/Context";
 import { PageLayout } from "@/components/Layout";
+import { findUserTokenFromCookie } from "@/lib/token";
 import {
 	Box,
 	Button,
@@ -113,7 +114,6 @@ function Page() {
 			return;
 		});
 	};
-
 	return (
 		<SignUpContainer direction="column" justifyContent="space-between">
 			<Card variant="outlined">
