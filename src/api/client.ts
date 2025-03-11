@@ -156,14 +156,25 @@ export const updateDiary = async (
 	);
 };
 
+export type deleteDiaryResponse = {
+	status: number;
+	headers: Headers;
+};
+
 export const getDeleteDiaryUrl = () => {
 	return "api/diary/";
 };
 
-export const deleteDiary = async (diary_id: string, options?: RequestInit) => {
-	return fetch2(`${getDeleteDiaryUrl()}${diary_id}/`, {
-		...options,
-		method: "DELETE",
-		headers: { ...options?.headers },
-	});
+export const deleteDiary = async (
+	diary_id: string,
+	options?: RequestInit,
+): Promise<deleteDiaryResponse> => {
+	return fetch2<Promise<deleteDiaryResponse>>(
+		`${getDeleteDiaryUrl()}${diary_id}/`,
+		{
+			...options,
+			method: "DELETE",
+			headers: { ...options?.headers },
+		},
+	);
 };

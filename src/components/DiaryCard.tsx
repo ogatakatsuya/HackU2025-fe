@@ -75,8 +75,11 @@ export const DiaryCard = ({
 				<IconButton
 					onClick={() => {
 						const token = findUserTokenFromCookie();
-						deleteDiary(id, { headers: { ...commonHeader({ token: token }) } });
-						router.push(`/diary/${date}`);
+						deleteDiary(id, {
+							headers: { ...commonHeader({ token: token }) },
+						}).then(({ status }) => {
+							if (status === 204) router.refresh();
+						});
 					}}
 				>
 					<DeleteIcon />

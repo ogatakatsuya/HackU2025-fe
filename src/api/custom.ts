@@ -6,8 +6,13 @@ export const fetch2 = async <T>(
 ): Promise<T> => {
 	const requestUrl = `${API_BASE_URL}${url}`;
 	const response = await fetch(requestUrl, options);
-	const data = await response.json();
-	return { status: response.status, data, headers: response.headers } as T;
+	const text = await response.text();
+	const data = text ? JSON.parse(text) : null;
+	return {
+		status: response.status,
+		data: data,
+		headers: response.headers,
+	} as T;
 };
 
 export const commonHeader = ({ token }: { token?: string }) => {

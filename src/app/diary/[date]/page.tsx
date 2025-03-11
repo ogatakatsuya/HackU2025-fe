@@ -36,6 +36,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 				headers: { ...commonHeader({ token: token }) },
 			}).then(({ data, status }) => {
 				if (status === 200) setDiaries(data);
+				else if (status === 404) setDiaries(null);
 			});
 		};
 
