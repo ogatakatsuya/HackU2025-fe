@@ -9,7 +9,6 @@ import { Box } from "@mui/material";
 function Page() {
 	return (
 		<>
-			<Header />
 			<Box mt={10}>
 				<Calendar />
 			</Box>

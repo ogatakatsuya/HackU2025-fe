@@ -5,7 +5,6 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 function Page({ params }: { params: Promise<{ section: string }> }) {
 	return (
 		<>
-			<Header />
 			<Box maxWidth={640} mx="auto" mt={10}>
 				<Box height="calc(75vh - 100px)" overflow="auto">
 					<Box display="flex" justifyContent="flex-end" mt={2}>

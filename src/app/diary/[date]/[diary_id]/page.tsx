@@ -55,8 +55,6 @@ function Page({
 
 	return (
 		<>
-			<Header />
-
 			<Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
 				<Card sx={{ minWidth: 320, maxWidth: 960, width: "80vw" }}>
 					<CardActions>
