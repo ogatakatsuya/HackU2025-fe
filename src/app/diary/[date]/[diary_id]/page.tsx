@@ -1,7 +1,11 @@
 "use client";
 
+import { deleteDiary, findDiaries } from "@/api/client";
+import { commonHeader } from "@/api/custom";
+import type { Diary } from "@/api/schemas/diary";
 import DiaryForm from "@/components/DiaryForm";
 import Header from "@/components/Header";
+import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,24 +22,36 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function Page({ params }: { params: Promise<{ diary_id: string }> }) {
+function Page({
+	params,
+}: { params: Promise<{ date: string; diary_id: string }> }) {
+	const [diary, setDiary] = useState<Diary | null>(null);
+	const [date, setDate] = useState<string | null>(null);
 	const [diaryId, setDiaryId] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const router = useRouter();
-
-	// DEBUG
-	const image = "/next.svg";
-	const content =
-		"content content content content content content content content content content content content content content";
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
 			setDiaryId(resolvedParams.diary_id);
+			setDate(resolvedParams.date);
+
+			const token = findUserTokenFromCookie();
+			if (!token || !date) return;
+			findDiaries(date, {
+				headers: { ...commonHeader({ token: token }) },
+			}).then(({ data, status }) => {
+				if (status === 200) {
+					data.map((d) => {
+						if (d.id === resolvedParams.diary_id) setDiary(d);
+					});
+				}
+			});
 		};
 
 		fetchData();
-	}, [params]);
+	}, [params, date]);
 
 	return (
 		<>
@@ -52,14 +68,27 @@ function Page({ params }: { params: Promise<{ diary_id: string }> }) {
 						<IconButton onClick={() => setOpen(true)}>
 							<EditIcon />
 						</IconButton>
-						<IconButton>
+						<IconButton
+							onClick={() => {
+								if (!diary) return;
+								const token = findUserTokenFromCookie();
+								deleteDiary(diary.id, {
+									headers: { ...commonHeader({ token: token }) },
+								});
+								router.push(`/diary/${diary.date}`);
+							}}
+						>
 							<DeleteIcon />
 						</IconButton>
 					</CardActions>
-					{diaryId === "example-id" ? (
+					{diary ? (
 						<>
-							{image ? (
-								<CardMedia component="img" image={image} />
+							{diary.image ? (
+								<CardMedia
+									component="img"
+									image={diary.image}
+									sx={{ maxHeight: 360, objectFit: "contain" }}
+								/>
 							) : (
 								<Box
 									height={140}
@@ -70,20 +99,31 @@ function Page({ params }: { params: Promise<{ diary_id: string }> }) {
 									<Typography>No Image</Typography>
 								</Box>
 							)}
-							<CardContent>{content}</CardContent>
+							<CardContent>
+								<Typography variant="h4">{diary.title}</Typography>
+								<Typography variant="body2" pb={1}>
+									{diary.date}
+								</Typography>
+								<Typography variant="body1">{diary.content}</Typography>
+							</CardContent>
 						</>
 					) : (
 						<Typography textAlign="center">日記が存在しません</Typography>
 					)}
 				</Card>
 			</Box>
-			<Modal open={open} onClose={() => setOpen(false)}>
-				<DiaryForm
-					img={image}
-					cont={content}
-					handleClose={() => setOpen(false)}
-				/>
-			</Modal>
+			{diary && (
+				<Modal open={open} onClose={() => setOpen(false)}>
+					<DiaryForm
+						id={diary.id}
+						img={diary.image}
+						ttl={diary.title}
+						cont={diary.content}
+						date={diary.date.slice(-5)}
+						handleClose={() => setOpen(false)}
+					/>
+				</Modal>
+			)}
 		</>
 	);
 }

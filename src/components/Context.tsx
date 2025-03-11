@@ -1,6 +1,7 @@
 "use client";
 
 import { findUser } from "@/api/client";
+import { commonHeader } from "@/api/custom";
 import type { User } from "@/api/schemas/user";
 import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
@@ -44,7 +45,7 @@ export const AppContextProvider = ({
 		}
 
 		findUser({
-			headers: { ...{ Authorization: `Bearer ${token}` } },
+			headers: commonHeader({ token: token }),
 		}).then(({ data: user, status }) => {
 			if (status !== 200) {
 				setAppState((prev) => ({

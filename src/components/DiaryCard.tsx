@@ -1,5 +1,8 @@
 "use client";
 
+import { deleteDiary } from "@/api/client";
+import { commonHeader } from "@/api/custom";
+import { findUserTokenFromCookie } from "@/lib/token";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
@@ -17,17 +20,24 @@ import { useEffect, useState } from "react";
 type DiaryCardProps = {
 	id: string;
 	image?: string;
+	title: string;
 	content: string;
 	date: string;
 };
 
-export const DiaryCard = ({ id, image, content, date }: DiaryCardProps) => {
+export const DiaryCard = ({
+	id,
+	image,
+	title,
+	content,
+	date,
+}: DiaryCardProps) => {
 	const [summary, setSummary] = useState("");
 	const router = useRouter();
 
 	useEffect(() => {
-		if (content.length > 60) {
-			setSummary(`${content.slice(0, 56)} ...`);
+		if (content.length > 30) {
+			setSummary(`${content.slice(0, 26)} ...`);
 		} else {
 			setSummary(content);
 		}
@@ -53,13 +63,25 @@ export const DiaryCard = ({ id, image, content, date }: DiaryCardProps) => {
 				</Box>
 			)}
 			<CardContent sx={{ height: 60, pt: 0.8 }}>
+				<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+					{title}
+				</Typography>
 				<Typography variant="body1">{summary}</Typography>
 			</CardContent>
 			<CardActions sx={{ height: 50 }}>
 				<IconButton onClick={() => router.push(`/diary/${date}/${id}`)}>
 					<VisibilityIcon />
 				</IconButton>
-				<IconButton>
+				<IconButton
+					onClick={() => {
+						const token = findUserTokenFromCookie();
+						deleteDiary(id, {
+							headers: { ...commonHeader({ token: token }) },
+						}).then(({ status }) => {
+							if (status === 204) router.refresh();
+						});
+					}}
+				>
 					<DeleteIcon />
 				</IconButton>
 			</CardActions>

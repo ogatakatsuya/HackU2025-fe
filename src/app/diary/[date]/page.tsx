@@ -1,8 +1,12 @@
 "use client";
 
+import { findDiaries } from "@/api/client";
+import { commonHeader } from "@/api/custom";
+import type { Diary } from "@/api/schemas/diary";
 import DiaryCard from "@/components/DiaryCard";
 import { DiaryForm } from "@/components/DiaryForm";
 import Header from "@/components/Header";
+import { findUserTokenFromCookie } from "@/lib/token";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import {
@@ -13,9 +17,11 @@ import {
 	Typography,
 } from "@mui/material";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 function Page({ params }: { params: Promise<{ date: string }> }) {
+	const [diaries, setDiaries] = useState<Diary[] | null>(null);
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 
@@ -23,10 +29,19 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 		const fetchData = async () => {
 			const resolvedParams = await params;
 			setDate(resolvedParams.date);
+
+			const token = findUserTokenFromCookie();
+			if (!token || !date) return;
+			findDiaries(date, {
+				headers: { ...commonHeader({ token: token }) },
+			}).then(({ data, status }) => {
+				if (status === 200) setDiaries(data);
+				else if (status === 404) setDiaries(null);
+			});
 		};
 
 		fetchData();
-	}, [params]);
+	}, [params, date]);
 
 	return (
 		<>
@@ -45,26 +60,20 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 						width: "100%",
 					}}
 				>
-					{date && (
-						<>
-							{/* DEBUG */}
-							<Box width={300}>
-								<DiaryCard
-									id="example-id"
-									image="/next.svg"
-									content="content content content content content content content content content content content content content content"
-									date={date}
-								/>
-							</Box>
-							<Box width={300}>
-								<DiaryCard
-									id="example-id"
-									content="content content content content content content content content content content content content content content"
-									date={date}
-								/>
-							</Box>
-						</>
-					)}
+					{date &&
+						diaries?.map((diary) => {
+							return (
+								<Box width={300} key={diary.id}>
+									<DiaryCard
+										id={diary.id}
+										image={diary.image}
+										title={diary.title}
+										content={diary.content}
+										date={diary.date}
+									/>
+								</Box>
+							);
+						})}
 				</Box>
 			</Box>
 			<SpeedDial
@@ -79,9 +88,11 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 				/>
 				<SpeedDialAction icon={<SmartToyIcon />} title="予定生成" />
 			</SpeedDial>
-			<Modal open={open} onClose={() => setOpen(false)}>
-				<DiaryForm handleClose={() => setOpen(false)} />
-			</Modal>
+			{date && (
+				<Modal open={open} onClose={() => setOpen(false)}>
+					<DiaryForm date={date} handleClose={() => setOpen(false)} />
+				</Modal>
+			)}
 		</>
 	);
 }
