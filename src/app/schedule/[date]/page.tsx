@@ -1,12 +1,11 @@
 "use client";
 
-import { findDiaries } from "@/api/client";
+import { findSchedules } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import type { Diary } from "@/api/schemas/diary";
-import DiaryCard from "@/components/DiaryCard";
-import { DiaryForm } from "@/components/DiaryForm";
 import Header from "@/components/Header";
-import ScheduleForm from "@/components/ScheduleForm";
+import ScheduleCard from "@/components/ScheduleCard";
+import { ScheduleForm } from "@/components/ScheduleForm";
 import { findUserTokenFromCookie } from "@/lib/token";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -23,14 +22,9 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 function Page({ params }: { params: Promise<{ date: string }> }) {
-	const [diaries, setDiaries] = useState<Diary[] | null>(null);
+	const [schedules, setSchedules] = useState<Diary[] | null>(null);
 	const [date, setDate] = useState<string | null>(null);
-	const [open, setOpen] = useState<boolean>(false);
-	const [text, setText] = useState("");
 	const [openTextField, setOpenTextField] = useState<boolean>(false);
-	const month = dayjs(date).format("MM");
-	const day = dayjs(date).format("DD");
-	const year = dayjs(date).format("YYYY");
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
@@ -38,19 +32,20 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 
 			const token = findUserTokenFromCookie();
 			if (!token || !date) return;
-			findDiaries(date, {
+			console.log(date);
+			findSchedules(date, {
 				headers: { ...commonHeader({ token: token }) },
 			}).then(({ data, status }) => {
-				if (status === 200) setDiaries(data);
-				else if (status === 404) setDiaries(null);
+				if (status === 200) setSchedules(data);
+				else if (status === 404) setSchedules(null);
 			});
 		};
-
 		fetchData();
 	}, [params, date]);
 
 	return (
 		<>
+			<Header />
 			<Box sx={{ textAlign: "center", mt: 10 }}>
 				<Typography component="h1" variant="h4">
 					{date ? date : undefined}
@@ -66,15 +61,13 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 					}}
 				>
 					{date &&
-						diaries?.map((diary) => {
+						schedules?.map((schedule) => {
 							return (
-								<Box width={300} key={diary.id}>
-									<DiaryCard
-										id={diary.id}
-										image={diary.image}
-										title={diary.title}
-										content={diary.content}
-										date={diary.date}
+								<Box width={300} key={schedule.id}>
+									<ScheduleCard
+										id={schedule.id}
+										content={schedule.content}
+										date={schedule.date}
 									/>
 								</Box>
 							);
@@ -87,28 +80,17 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 				sx={{ position: "fixed", bottom: 16, right: 16 }}
 			>
 				<SpeedDialAction
-					onClick={() => setOpen(true)}
-					icon={<DescriptionIcon />}
-					title="新規作成"
-				/>
-				<SpeedDialAction
 					onClick={() => setOpenTextField(true)}
 					icon={<SmartToyIcon />}
 					title="予定生成"
 				/>
 			</SpeedDial>
-
 			{date && (
 				<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
 					<ScheduleForm
 						date={date}
 						handleClose={() => setOpenTextField(false)}
 					/>
-				</Modal>
-			)}
-			{date && (
-				<Modal open={open} onClose={() => setOpen(false)}>
-					<DiaryForm date={date} handleClose={() => setOpen(false)} />
 				</Modal>
 			)}
 		</>

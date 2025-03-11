@@ -1,12 +1,14 @@
+import dayjs from "dayjs";
 import { fetch2 } from "./custom";
 import type { CreateDiaryReq } from "./schemas/createDiaryReq";
+import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
 import type { LoginUserReq } from "./schemas/loginUserReq";
+import type { Schedule } from "./schemas/schedule";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -85,16 +87,58 @@ export const logoutUser = async (options?: RequestInit) => {
 	});
 };
 
+export type createSchedulesResponse = {
+	data: Schedule[];
+	status: number;
+	headers: Headers;
+};
+export const getCreateScheduleUrl = () => {
+	return "api/schedule/";
+};
+export const createSchedules = async (
+	createScheduleReq: CreateSchedulesReq,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	return fetch2<Promise<createSchedulesResponse>>(getCreateScheduleUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createScheduleReq),
+	});
+};
+
+export type findSchedulesResponse = {
+	data: Schedule[];
+	status: number;
+	headers: Headers;
+};
+export const getFindSchedulesUrl = () => {
+	return "api/schedule/";
+};
+export const findSchedules = async (
+	date: string,
+	options?: RequestInit,
+): Promise<findSchedulesResponse> => {
+	const parsedDate = dayjs(date);
+	const year = parsedDate.format("YYYY");
+	const month = parsedDate.format("MM");
+	const day = parsedDate.format("DD");
+	const url = `${getFindSchedulesUrl()}?month=${month}&year=${year}&day=${day}`;
+	return fetch2<Promise<findDiariesResponse>>(url, {
+		...options,
+		method: "GET",
+		headers: { ...options?.headers },
+	});
+};
+
 export type createDiaryResponse = {
 	data: Diary;
 	status: number;
 	headers: Headers;
 };
-
 export const getCreateDiaryUrl = () => {
 	return "api/diary/";
 };
-
 export const createDiary = async (
 	createDiaryReq: CreateDiaryReq,
 	options?: RequestInit,
