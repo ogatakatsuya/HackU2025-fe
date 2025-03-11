@@ -6,7 +6,8 @@ import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-
+import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
+import type { Schedule } from "./schemas/schedule";
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -91,8 +92,16 @@ export type createDiaryResponse = {
 	headers: Headers;
 };
 
+export type createSchedulesResponse = {
+	data: Schedule[];
+	status: number;
+	headers: Headers;
+};
 export const getCreateDiaryUrl = () => {
 	return "api/diary/";
+};
+export const getCreateScheduleUrl = () => {
+	return "api/schedule/";
 };
 
 export const createDiary = async (
@@ -104,6 +113,18 @@ export const createDiary = async (
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		body: JSON.stringify(createDiaryReq),
+	});
+};
+
+export const createSchedules = async (
+	createScheduleReq: CreateSchedulesReq,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	return fetch2<Promise<createSchedulesResponse>>(getCreateScheduleUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createScheduleReq),
 	});
 };
 

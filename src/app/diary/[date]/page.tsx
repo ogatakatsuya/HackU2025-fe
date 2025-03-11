@@ -15,16 +15,22 @@ import {
 	SpeedDial,
 	SpeedDialIcon,
 	Typography,
+	TextField,
 } from "@mui/material";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import ScheduleForm from "@/components/ScheduleForm";
 
 function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [diaries, setDiaries] = useState<Diary[] | null>(null);
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
-
+	const [text, setText] = useState("");
+	const [openTextField, setOpenTextField] = useState<boolean>(false);
+	const month = dayjs(date).format("MM");
+	const day = dayjs(date).format("DD");
+	const year = dayjs(date).format("YYYY");
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
@@ -86,8 +92,21 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 					icon={<DescriptionIcon />}
 					title="新規作成"
 				/>
-				<SpeedDialAction icon={<SmartToyIcon />} title="予定生成" />
+				<SpeedDialAction
+					onClick={() => setOpenTextField(true)}
+					icon={<SmartToyIcon />}
+					title="予定生成"
+				/>
 			</SpeedDial>
+
+			{date && (
+				<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
+					<ScheduleForm
+						date={date}
+						handleClose={() => setOpenTextField(false)}
+					/>
+				</Modal>
+			)}
 			{date && (
 				<Modal open={open} onClose={() => setOpen(false)}>
 					<DiaryForm date={date} handleClose={() => setOpen(false)} />
