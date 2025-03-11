@@ -2,6 +2,7 @@
 
 import { createDiary, updateDiary } from "@/api/client";
 import { commonHeader } from "@/api/custom";
+import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
 import {
 	Button,
@@ -11,15 +12,11 @@ import {
 	CardHeader,
 	CardMedia,
 	IconButton,
-	InputLabel,
 	TextField,
 	Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { useAppStateContext } from "./Context";
-import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type DiaryFormProps = {
 	id?: string;
