@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { createSchedules } from "@/api/client";
+import { commonHeader } from "@/api/custom";
+import { findUserTokenFromCookie } from "@/lib/token";
+import CloseIcon from "@mui/icons-material/Close";
 import {
 	Button,
 	Card,
@@ -11,11 +14,8 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { findUserTokenFromCookie } from "@/lib/token";
 import { useRouter } from "next/navigation";
-import { createSchedules } from "@/api/client";
-import { commonHeader } from "@/api/custom";
+import { useState } from "react";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;
