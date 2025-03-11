@@ -1,5 +1,5 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export const ChatPopup = () => {

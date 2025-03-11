@@ -13,8 +13,8 @@ import {
 	Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import SectionsList from "./SectionsList";
 import { useState } from "react";
+import SectionsList from "./SectionsList";
 
 export const Header = () => {
 	const { user } = useAppStateContext();

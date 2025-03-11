@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
-import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
 
 function Page({ params }: { params: Promise<{ section: string }> }) {
 	return (
