@@ -163,6 +163,7 @@ export const DiaryForm = ({
 		}
 		const token = findUserTokenFromCookie();
 		if (!token) return;
+		if (generatingImage) return;
 
 		setGeneratingImage(true);
 		try {
