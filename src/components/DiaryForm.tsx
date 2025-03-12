@@ -1,6 +1,6 @@
 "use client";
 
-import { createDiary, updateDiary, generateDiaryImage } from "@/api/client";
+import { createDiary, generateDiaryImage, updateDiary } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";

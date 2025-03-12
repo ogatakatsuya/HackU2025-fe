@@ -4,13 +4,13 @@ import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
+import type { GenerateImageReq } from "./schemas/generateImageReq";
+import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-import type { GenerateImageReq } from "./schemas/generateImageReq";
-import type { ImageResp } from "./schemas/imageResp";
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
