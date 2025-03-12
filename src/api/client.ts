@@ -6,6 +6,7 @@ import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
+import type { GenerateImageReq } from "./schemas/generateImageReq";
 
 export type createUserResponse = {
 	data: UserResp;
@@ -177,4 +178,26 @@ export const deleteDiary = async (
 			headers: { ...options?.headers },
 		},
 	);
+};
+
+export type imageGenerateResponse = {
+	status: number;
+	headers: Headers;
+	image: string;
+};
+
+export const getGenerateImageUrl = () => {
+	return "api/gen_image/";
+};
+
+export const generateDiaryImage = async (
+	generateImageReq: GenerateImageReq,
+	options?: RequestInit,
+): Promise<imageGenerateResponse> => {
+	return fetch2<Promise<imageGenerateResponse>>(getGenerateImageUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(generateImageReq),
+	});
 };

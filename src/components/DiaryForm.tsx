@@ -1,6 +1,6 @@
 "use client";
 
-import { createDiary, updateDiary } from "@/api/client";
+import { createDiary, updateDiary, generateDiaryImage } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
@@ -47,6 +47,8 @@ export const DiaryForm = ({
 	const [contentErrorMessage, setContentErrorMessage] = useState("");
 	const [fileLoading, setFileLoading] = useState(false);
 	const [imageFileBase64, setImageFileBase64] = useState("");
+	const [generatingImage, setGeneratingImage] = useState(false);
+
 	const router = useRouter();
 
 	useEffect(() => {
@@ -114,6 +116,7 @@ export const DiaryForm = ({
 
 	const handleSubmit = () => {
 		if (fileLoading) return;
+		if (generatingImage) return;
 		if (!time || !title || !content) return;
 		const token = findUserTokenFromCookie();
 		if (!token) return;
@@ -152,6 +155,38 @@ export const DiaryForm = ({
 		}
 	};
 
+
+	const handleGenerateImage = async () => {
+		if (!content) {
+			setContentError(true);
+			setContentErrorMessage("文章を入力してください");
+			return;
+		}
+		const token = findUserTokenFromCookie();
+		if (!token) return;
+
+		setGeneratingImage(true);
+		try {
+			const generatedImage = await generateDiaryImage(
+				{
+					content: content,
+				},
+				{ headers: { ...commonHeader({ token: token }) } },
+			);
+			if (generatedImage) {
+				setImage(`data:image/png;base64,${generatedImage.image}`);
+				setImageFileBase64(generatedImage.image);
+				console.log(generatedImage.image);
+				console.log(imageFileBase64);
+			}
+		} catch (error) {
+			alert("画像生成に失敗しました");
+			console.error(error);
+		} finally {
+			setGeneratingImage(false);
+		}
+	};
+
 	return (
 		<Card
 			sx={{
@@ -182,6 +217,8 @@ export const DiaryForm = ({
 						}
 						if (event.target.files)
 							readFile(event.target.files[0], setImageFileBase64);
+						console.log(image)
+						console.log(imageFileBase64)
 					}}
 					style={{
 						opacity: 0,
@@ -199,6 +236,15 @@ export const DiaryForm = ({
 				) : (
 					<Typography>Upload Image</Typography>
 				)}
+			</Button>
+			<Button
+				sx={{ width: "50%", marginLeft: "25%" }}
+				variant="outlined"
+				fullWidth
+				onClick={handleGenerateImage}
+				disabled={generatingImage}
+			>
+				{generatingImage ? "生成中…" : "文章をもとに画像を生成"}
 			</Button>
 			<CardContent>
 				<TextField
