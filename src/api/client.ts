@@ -11,6 +11,8 @@ import type { Schedule } from "./schemas/schedule";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
+import type { Section } from "./schemas/section";
+import type { CreateSectionReq } from "./schemas/createSectionReq";
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -244,5 +246,47 @@ export const generateDiaryImage = async (
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		body: JSON.stringify(generateImageReq),
+	});
+};
+
+export type createSectionResponse = {
+	status: number;
+	headers: Headers;
+	data: Section;
+};
+
+export const getCreateSectionUrl = () => {
+	return "api/section/";
+};
+
+export const createSection = async (
+	createSectionReq: CreateSectionReq,
+	options?: RequestInit,
+): Promise<createSectionResponse> => {
+	return fetch2<Promise<createSectionResponse>>(getCreateSectionUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createSectionReq),
+	});
+};
+
+export type findSectionsReq = {
+	status: number;
+	headers: Headers;
+	data: Section[];
+};
+
+export const getFindSectionsUrl = () => {
+	return "api/section/";
+};
+
+export const findSections = async (
+	options?: RequestInit,
+): Promise<findSectionsReq> => {
+	return fetch2<Promise<findSectionsReq>>(getFindSectionsUrl(), {
+		...options,
+		method: "GET",
+		headers: { ...options?.headers },
 	});
 };
