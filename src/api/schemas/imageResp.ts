@@ -1,3 +1,3 @@
 export interface ImageResp {
-    image: string;
+	image: string;
 }
