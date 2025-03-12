@@ -7,6 +7,7 @@ import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
 import type { GenerateImageReq } from "./schemas/generateImageReq";
+import type { ImageResp } from "./schemas/imageResp";
 
 export type createUserResponse = {
 	data: UserResp;
@@ -183,7 +184,7 @@ export const deleteDiary = async (
 export type imageGenerateResponse = {
 	status: number;
 	headers: Headers;
-	image: string;
+	data: ImageResp;
 };
 
 export const getGenerateImageUrl = () => {

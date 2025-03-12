@@ -155,7 +155,6 @@ export const DiaryForm = ({
 		}
 	};
 
-
 	const handleGenerateImage = async () => {
 		if (!content) {
 			setContentError(true);
@@ -167,18 +166,17 @@ export const DiaryForm = ({
 
 		setGeneratingImage(true);
 		try {
-			const generatedImage = await generateDiaryImage(
+			generateDiaryImage(
 				{
 					content: content,
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
-			);
-			if (generatedImage) {
-				setImage(`data:image/png;base64,${generatedImage.image}`);
-				setImageFileBase64(generatedImage.image);
-				console.log(generatedImage.image);
-				console.log(imageFileBase64);
-			}
+			).then(({ data, status }) => {
+				if (status === 200) {
+					setImage(`data:image/png;base64,${data.image}`);
+					setImageFileBase64(data.image);
+				}
+			});
 		} catch (error) {
 			alert("画像生成に失敗しました");
 			console.error(error);
@@ -217,8 +215,6 @@ export const DiaryForm = ({
 						}
 						if (event.target.files)
 							readFile(event.target.files[0], setImageFileBase64);
-						console.log(image)
-						console.log(imageFileBase64)
 					}}
 					style={{
 						opacity: 0,
@@ -231,22 +227,23 @@ export const DiaryForm = ({
 					<CardMedia
 						component="img"
 						image={image}
-						sx={{ maxHeight: 360, objectFit: "contain" }}
+						sx={{ maxHeight: 360, objectFit: "contain", mb: 2 }}
 					/>
 				) : (
 					<Typography>Upload Image</Typography>
 				)}
 			</Button>
-			<Button
-				sx={{ width: "50%", marginLeft: "25%" }}
-				variant="outlined"
-				fullWidth
-				onClick={handleGenerateImage}
-				disabled={generatingImage}
-			>
-				{generatingImage ? "生成中…" : "文章をもとに画像を生成"}
-			</Button>
+
 			<CardContent>
+				<Button
+					sx={{ mb: 2 }}
+					variant="outlined"
+					fullWidth
+					onClick={handleGenerateImage}
+					disabled={generatingImage}
+				>
+					{generatingImage ? "生成中…" : "文章をもとに画像を生成"}
+				</Button>
 				<TextField
 					label="時間"
 					slotProps={{ inputLabel: { shrink: true } }}
