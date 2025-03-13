@@ -28,6 +28,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [text, setText] = useState("");
 	const [openTextField, setOpenTextField] = useState<boolean>(false);
+	const [view, setView] = useState(false);
 	const month = dayjs(date).format("MM");
 	const day = dayjs(date).format("DD");
 	const year = dayjs(date).format("YYYY");
@@ -37,10 +38,11 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 			setDate(resolvedParams.date);
 
 			const token = findUserTokenFromCookie();
-			if (!token || !date) return;
+			if (!token || !date || !dayjs(date).isValid()) return;
 			findDiaries(date, {
 				headers: { ...commonHeader({ token: token }) },
 			}).then(({ data, status }) => {
+				setView(true);
 				if (status === 200) setDiaries(data);
 				else if (status === 404) setDiaries(null);
 			});
@@ -51,65 +53,73 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 
 	return (
 		<>
-			<Box sx={{ textAlign: "center", mt: 10 }}>
-				<Typography component="h1" variant="h4">
-					{date ? date : undefined}
-				</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						mt: 2,
-						gap: 2,
-						flexWrap: "wrap",
-						width: "100%",
-					}}
-				>
-					{date &&
-						diaries?.map((diary) => {
-							return (
-								<Box width={300} key={diary.id}>
-									<DiaryCard
-										id={diary.id}
-										image={diary.image}
-										title={diary.title}
-										content={diary.content}
-										date={diary.date}
-									/>
-								</Box>
-							);
-						})}
-				</Box>
-			</Box>
-			<SpeedDial
-				ariaLabel="Addition"
-				icon={<SpeedDialIcon />}
-				sx={{ position: "fixed", bottom: 16, right: 16 }}
-			>
-				<SpeedDialAction
-					onClick={() => setOpen(true)}
-					icon={<DescriptionIcon />}
-					title="新規作成"
-				/>
-				<SpeedDialAction
-					onClick={() => setOpenTextField(true)}
-					icon={<SmartToyIcon />}
-					title="予定生成"
-				/>
-			</SpeedDial>
+			{view ? (
+				<>
+					<Box sx={{ textAlign: "center", mt: 10 }}>
+						<Typography component="h1" variant="h4">
+							{date ? date : undefined}
+						</Typography>
+						<Box
+							sx={{
+								display: "flex",
+								justifyContent: "center",
+								mt: 2,
+								gap: 2,
+								flexWrap: "wrap",
+								width: "100%",
+							}}
+						>
+							{date &&
+								diaries?.map((diary) => {
+									return (
+										<Box width={300} key={diary.id}>
+											<DiaryCard
+												id={diary.id}
+												image={diary.image}
+												title={diary.title}
+												content={diary.content}
+												date={diary.date}
+											/>
+										</Box>
+									);
+								})}
+						</Box>
+					</Box>
+					<SpeedDial
+						ariaLabel="Addition"
+						icon={<SpeedDialIcon />}
+						sx={{ position: "fixed", bottom: 16, right: 16 }}
+					>
+						<SpeedDialAction
+							onClick={() => setOpen(true)}
+							icon={<DescriptionIcon />}
+							title="新規作成"
+						/>
+						<SpeedDialAction
+							onClick={() => setOpenTextField(true)}
+							icon={<SmartToyIcon />}
+							title="予定生成"
+						/>
+					</SpeedDial>
 
-			{date && (
-				<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
-					<ScheduleForm
-						date={date}
-						handleClose={() => setOpenTextField(false)}
-					/>
-				</Modal>
-			)}
-			{date && (
-				<Modal open={open} onClose={() => setOpen(false)}>
-					<DiaryForm date={date} handleClose={() => setOpen(false)} />
-				</Modal>
+					{date && (
+						<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
+							<ScheduleForm
+								date={date}
+								handleClose={() => setOpenTextField(false)}
+							/>
+						</Modal>
+					)}
+					{date && (
+						<Modal open={open} onClose={() => setOpen(false)}>
+							<DiaryForm date={date} handleClose={() => setOpen(false)} />
+						</Modal>
+					)}
+				</>
+			) : (
+				<Typography variant="body1" mt={10}>
+					存在しない日付です
+				</Typography>
 			)}
 		</>
 	);

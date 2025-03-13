@@ -1,16 +1,21 @@
 import dayjs from "dayjs";
 import { fetch2 } from "./custom";
+import type { Chat } from "./schemas/chat";
+import type { CreateChatReq } from "./schemas/createChatReq";
 import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
+import type { CreateSectionReq } from "./schemas/createSectionReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
 import type { GenerateImageReq } from "./schemas/generateImageReq";
 import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
+import type { Section } from "./schemas/section";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
+
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -244,5 +249,90 @@ export const generateDiaryImage = async (
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		body: JSON.stringify(generateImageReq),
+	});
+};
+
+export type createSectionResponse = {
+	status: number;
+	headers: Headers;
+	data: Section;
+};
+
+export const getCreateSectionUrl = () => {
+	return "api/section/";
+};
+
+export const createSection = async (
+	createSectionReq: CreateSectionReq,
+	options?: RequestInit,
+): Promise<createSectionResponse> => {
+	return fetch2<Promise<createSectionResponse>>(getCreateSectionUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createSectionReq),
+	});
+};
+
+export type findSectionsReq = {
+	status: number;
+	headers: Headers;
+	data: Section[];
+};
+
+export const getFindSectionsUrl = () => {
+	return "api/section/";
+};
+
+export const findSections = async (
+	options?: RequestInit,
+): Promise<findSectionsReq> => {
+	return fetch2<Promise<findSectionsReq>>(getFindSectionsUrl(), {
+		...options,
+		method: "GET",
+		headers: { ...options?.headers },
+	});
+};
+
+export type createChatResponse = {
+	status: number;
+	headers: Headers;
+	data: Chat;
+};
+
+export const getCreateChatUrl = () => {
+	return "api/chat/";
+};
+
+export const createChat = async (
+	createChatReq: CreateChatReq,
+	options?: RequestInit,
+): Promise<createChatResponse> => {
+	return fetch2<Promise<createChatResponse>>(getCreateChatUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createChatReq),
+	});
+};
+
+export type findChatsResponse = {
+	status: number;
+	headers: Headers;
+	data: Chat[];
+};
+
+export const getFindChatsUrl = (section_id: string) => {
+	return `api/chat/${section_id}/section`;
+};
+
+export const findChats = async (
+	section_id: string,
+	options?: RequestInit,
+): Promise<findChatsResponse> => {
+	return fetch2<Promise<findChatsResponse>>(getFindChatsUrl(section_id), {
+		...options,
+		method: "GET",
+		headers: { ...options?.headers },
 	});
 };
