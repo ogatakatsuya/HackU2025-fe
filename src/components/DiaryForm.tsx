@@ -93,6 +93,7 @@ export const DiaryForm = ({
 		if (!time) {
 			setTimeError(true);
 			setTimeErrorMessage("時間を入力してください");
+			isValid = false;
 		} else {
 			setTimeError(false);
 			setTimeErrorMessage("");
@@ -101,6 +102,7 @@ export const DiaryForm = ({
 		if (!title) {
 			setTitleError(true);
 			setTitleErrorMessage("タイトルを入力してください");
+			isValid = false;
 		} else {
 			setTitleError(false);
 			setTitleErrorMessage("");
