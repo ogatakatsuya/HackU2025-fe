@@ -1,11 +1,13 @@
 "use client";
 
-import { findDiaries } from "@/api/client";
+import { findDiaries, findSchedules } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import type { Diary } from "@/api/schemas/diary";
+import type { Schedule } from "@/api/schemas/schedule";
 import DiaryCard from "@/components/DiaryCard";
 import { DiaryForm } from "@/components/DiaryForm";
 import Header from "@/components/Header";
+import ScheduleCard from "@/components/ScheduleCard";
 import ScheduleForm from "@/components/ScheduleForm";
 import { findUserTokenFromCookie } from "@/lib/token";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -29,6 +31,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [text, setText] = useState("");
 	const [openTextField, setOpenTextField] = useState<boolean>(false);
 	const [view, setView] = useState(false);
+	const [schedules, setSchedules] = useState<Schedule[] | null>(null);
 	const month = dayjs(date).format("MM");
 	const day = dayjs(date).format("DD");
 	const year = dayjs(date).format("YYYY");
@@ -45,6 +48,12 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 				setView(true);
 				if (status === 200) setDiaries(data);
 				else if (status === 404) setDiaries(null);
+			});
+			findSchedules(date, {
+				headers: { ...commonHeader({ token: token }) },
+			}).then(({ data, status }) => {
+				if (status === 200) setSchedules(data);
+				else if (status === 404) setSchedules(null);
 			});
 		};
 
@@ -83,6 +92,39 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 										</Box>
 									);
 								})}
+						</Box>
+						<Box sx={{ mt: 5, mb: 5 }}>
+							{schedules &&
+								schedules.filter((schedule) => schedule.date === date).length >
+									0 && (
+									<>
+										<Typography component="h1" variant="h4">
+											スケジュール
+										</Typography>
+										<Box
+											sx={{
+												display: "flex",
+												justifyContent: "center",
+												mt: 2,
+												gap: 2,
+												flexWrap: "wrap",
+												width: "100%",
+											}}
+										>
+											{schedules
+												.filter((schedule) => schedule.date === date)
+												.map((schedule) => (
+													<Box width={300} key={schedule.id}>
+														<ScheduleCard
+															id={schedule.id}
+															content={schedule.content}
+															date={schedule.date}
+														/>
+													</Box>
+												))}
+										</Box>
+									</>
+								)}
 						</Box>
 					</Box>
 					<SpeedDial
