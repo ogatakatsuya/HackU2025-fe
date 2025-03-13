@@ -10,23 +10,27 @@ export const ChatPopup = () => {
 
 	const handleClick = () => {
 		const token = findUserTokenFromCookie();
-		findSections({ headers: { ...commonHeader({ token: token }) } }).then(
-			({ status, data }) => {
-				if (status !== 200) return;
-				if (data.length > 0) {
-					const latest = data[data.length - 1].id;
-					router.push(`/chat/${latest}`);
-				} else {
-					createSection(
-						{ title: "思い出トーク" },
-						{ headers: { ...commonHeader({ token: token }) } },
-					).then(({ status, data }) => {
-						if (status !== 201) return;
-						router.push(`/chat/${data.id}`);
-					});
-				}
-			},
-		);
+		if (token) {
+			findSections({ headers: { ...commonHeader({ token: token }) } }).then(
+				({ status, data }) => {
+					if (status !== 200) return;
+					if (data.length > 0) {
+						const latest = data[data.length - 1].id;
+						router.push(`/chat/${latest}`);
+					} else {
+						createSection(
+							{ title: "思い出トーク" },
+							{ headers: { ...commonHeader({ token: token }) } },
+						).then(({ status, data }) => {
+							if (status !== 201) return;
+							router.push(`/chat/${data.id}`);
+						});
+					}
+				},
+			);
+		} else {
+			router.push("/login");
+		}
 	};
 
 	return (
