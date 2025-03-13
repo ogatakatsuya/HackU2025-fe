@@ -32,7 +32,6 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 
 			const token = findUserTokenFromCookie();
 			if (!token || !date) return;
-			console.log(date);
 			findSchedules(date, {
 				headers: { ...commonHeader({ token: token }) },
 			}).then(({ data, status }) => {

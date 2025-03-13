@@ -52,10 +52,6 @@ export const DiaryForm = ({
 	const router = useRouter();
 
 	useEffect(() => {
-		console.log("generatingImage:", generatingImage);
-	}, [generatingImage]);
-
-	useEffect(() => {
 		if (!img || img !== image) return;
 		fetch(img).then((res) => {
 			res.blob().then((blob) => {
