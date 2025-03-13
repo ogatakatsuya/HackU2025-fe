@@ -4,6 +4,8 @@ import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
+import type { GenerateImageReq } from "./schemas/generateImageReq";
+import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
@@ -221,4 +223,26 @@ export const deleteDiary = async (
 			headers: { ...options?.headers },
 		},
 	);
+};
+
+export type imageGenerateResponse = {
+	status: number;
+	headers: Headers;
+	data: ImageResp;
+};
+
+export const getGenerateImageUrl = () => {
+	return "api/gen_image/";
+};
+
+export const generateDiaryImage = async (
+	generateImageReq: GenerateImageReq,
+	options?: RequestInit,
+): Promise<imageGenerateResponse> => {
+	return fetch2<Promise<imageGenerateResponse>>(getGenerateImageUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(generateImageReq),
+	});
 };

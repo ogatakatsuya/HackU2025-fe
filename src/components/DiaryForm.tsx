@@ -1,6 +1,6 @@
 "use client";
 
-import { createDiary, updateDiary } from "@/api/client";
+import { createDiary, generateDiaryImage, updateDiary } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
@@ -47,7 +47,13 @@ export const DiaryForm = ({
 	const [contentErrorMessage, setContentErrorMessage] = useState("");
 	const [fileLoading, setFileLoading] = useState(false);
 	const [imageFileBase64, setImageFileBase64] = useState("");
+	const [generatingImage, setGeneratingImage] = useState(false);
+
 	const router = useRouter();
+
+	useEffect(() => {
+		console.log("generatingImage:", generatingImage);
+	}, [generatingImage]);
 
 	useEffect(() => {
 		if (!img || img !== image) return;
@@ -114,6 +120,7 @@ export const DiaryForm = ({
 
 	const handleSubmit = () => {
 		if (fileLoading) return;
+		if (generatingImage) return;
 		if (!time || !title || !content) return;
 		const token = findUserTokenFromCookie();
 		if (!token) return;
@@ -149,6 +156,38 @@ export const DiaryForm = ({
 					handleClose();
 				}
 			});
+		}
+	};
+
+	const handleGenerateImage = async () => {
+		if (!content) {
+			setContentError(true);
+			setContentErrorMessage("文章を入力してください");
+			return;
+		}
+		const token = findUserTokenFromCookie();
+		if (!token) return;
+		if (generatingImage) return;
+
+		setGeneratingImage(true);
+
+		try {
+			generateDiaryImage(
+				{
+					content: content,
+				},
+				{ headers: { ...commonHeader({ token: token }) } },
+			).then(({ data, status }) => {
+				if (status === 200) {
+					setImage(`data:image/png;base64,${data.image}`);
+					setImageFileBase64(data.image);
+				}
+				setGeneratingImage(false);
+			});
+		} catch (error) {
+			alert("画像生成に失敗しました");
+			console.error(error);
+			setGeneratingImage(false);
 		}
 	};
 
@@ -194,13 +233,23 @@ export const DiaryForm = ({
 					<CardMedia
 						component="img"
 						image={image}
-						sx={{ maxHeight: 360, objectFit: "contain" }}
+						sx={{ maxHeight: 360, objectFit: "contain", mb: 2 }}
 					/>
 				) : (
 					<Typography>Upload Image</Typography>
 				)}
 			</Button>
+
 			<CardContent>
+				<Button
+					sx={{ mb: 2 }}
+					variant="outlined"
+					fullWidth
+					onClick={handleGenerateImage}
+					disabled={generatingImage}
+				>
+					{generatingImage ? "生成中…" : "文章をもとに画像を生成"}
+				</Button>
 				<TextField
 					label="時間"
 					slotProps={{ inputLabel: { shrink: true } }}
