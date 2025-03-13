@@ -1,20 +1,21 @@
 import dayjs from "dayjs";
 import { fetch2 } from "./custom";
+import type { Chat } from "./schemas/chat";
+import type { CreateChatReq } from "./schemas/createChatReq";
 import type { CreateDiaryReq } from "./schemas/createDiaryReq";
 import type { CreateSchedulesReq } from "./schemas/createSchedulesReq";
+import type { CreateSectionReq } from "./schemas/createSectionReq";
 import type { CreateUserReq } from "./schemas/createUserReq";
 import type { Diary } from "./schemas/diary";
 import type { GenerateImageReq } from "./schemas/generateImageReq";
 import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
+import type { Section } from "./schemas/section";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-import type { Section } from "./schemas/section";
-import type { CreateSectionReq } from "./schemas/createSectionReq";
-import type { Chat } from "./schemas/chat";
-import type { CreateChatReq } from "./schemas/createChatReq";
+
 export type createUserResponse = {
 	data: UserResp;
 	status: number;

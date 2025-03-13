@@ -2,6 +2,7 @@ import { createSection, findSections } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import type { Section } from "@/api/schemas/section";
 import { findUserTokenFromCookie } from "@/lib/token";
+import AddIcon from "@mui/icons-material/Add";
 import {
 	Box,
 	Button,
@@ -16,7 +17,6 @@ import {
 	ListItemText,
 	TextField,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAppStateContext } from "./Context";
