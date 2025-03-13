@@ -181,7 +181,7 @@ export const DiaryForm = ({
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ data, status }) => {
 				if (status === 200) {
-					setImage(`data:image/png;base64,${data.image}`);
+					setImage(`data:image/jpeg;base64,${data.image}`);
 					setImageFileBase64(data.image);
 				}
 				setGeneratingImage(false);
