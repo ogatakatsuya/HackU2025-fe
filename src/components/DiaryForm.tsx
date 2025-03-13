@@ -52,6 +52,10 @@ export const DiaryForm = ({
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log("generatingImage:", generatingImage);
+	}, [generatingImage]);
+
+	useEffect(() => {
 		if (!img || img !== image) return;
 		fetch(img).then((res) => {
 			res.blob().then((blob) => {
@@ -166,6 +170,7 @@ export const DiaryForm = ({
 		if (generatingImage) return;
 
 		setGeneratingImage(true);
+
 		try {
 			generateDiaryImage(
 				{
@@ -177,11 +182,11 @@ export const DiaryForm = ({
 					setImage(`data:image/png;base64,${data.image}`);
 					setImageFileBase64(data.image);
 				}
+				setGeneratingImage(false);
 			});
 		} catch (error) {
 			alert("画像生成に失敗しました");
 			console.error(error);
-		} finally {
 			setGeneratingImage(false);
 		}
 	};
