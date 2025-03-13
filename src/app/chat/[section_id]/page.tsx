@@ -1,15 +1,19 @@
 "use client";
 
-import { createChat, findChats } from "@/api/client";
+import { createChat, findChats, findSections } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import type { Chat } from "@/api/schemas/chat";
+import type { Section } from "@/api/schemas/section";
+import { useAppStateContext } from "@/components/Context";
 import { findUserTokenFromCookie } from "@/lib/token";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 function Page({ params }: { params: Promise<{ section_id: string }> }) {
+	const { user } = useAppStateContext();
 	const [sectionId, setSectionId] = useState<string>();
+	const [view, setView] = useState<boolean>(false);
 	const [chats, setChats] = useState<Chat[] | null>();
 	const [message, setMessage] = useState<string>();
 
@@ -22,17 +26,28 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 	}, [params]);
 
 	useEffect(() => {
-		if (!sectionId) return;
+		if (!sectionId || !user) return;
 		const token = findUserTokenFromCookie();
-		findChats(sectionId, {
-			headers: { ...commonHeader({ token: token }) },
-		}).then(({ status, data }) => {
-			if (status === 200) {
-				setChats(data);
-				filterSortChats();
-			}
-		});
-	}, [sectionId]);
+		findSections({ headers: { ...commonHeader({ token: token }) } }).then(
+			({ status, data }) => {
+				if (status !== 200) return;
+				if (
+					data.filter((d) => d.user === user.pk && d.id === sectionId)
+						.length === 0
+				)
+					return;
+				setView(true);
+				findChats(sectionId, {
+					headers: { ...commonHeader({ token: token }) },
+				}).then(({ status, data }) => {
+					if (status === 200) {
+						setChats(data);
+						filterSortChats();
+					}
+				});
+			},
+		);
+	}, [sectionId, user]);
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
@@ -80,67 +95,79 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 
 	return (
 		<>
-			<Box maxWidth={640} mx="auto" mt={10}>
-				<Box height="calc(75vh - 100px)" overflow="auto">
-					{chats?.map((chat) => {
-						if (chat.role === 0) {
-							return (
-								<Box
-									key={chat.id}
-									display="flex"
-									justifyContent="flex-end"
-									mt={2}
-								>
+			{view ? (
+				<Box
+					maxWidth={640}
+					mx="auto"
+					mt={10}
+					display="flex"
+					justifyContent="center"
+				>
+					<Box height="calc(75vh - 100px)" overflow="auto" width="90vw">
+						{chats?.map((chat) => {
+							if (chat.role === 0) {
+								return (
 									<Box
-										bgcolor="lightgray"
-										borderRadius={5}
-										display="inline-block"
-										right={0}
-										px={2}
-										py={1}
+										key={chat.id}
+										display="flex"
+										justifyContent="flex-end"
+										mt={2}
+									>
+										<Box
+											bgcolor="lightgray"
+											borderRadius={5}
+											display="inline-block"
+											right={0}
+											px={2}
+											py={1}
+										>
+											<Typography variant="body1">{chat.content}</Typography>
+										</Box>
+									</Box>
+								);
+							}
+							if (chat.role === 1) {
+								return (
+									<Box
+										key={chat.id}
+										display="flex"
+										justifyContent="flex-start"
+										mt={2}
 									>
 										<Typography variant="body1">{chat.content}</Typography>
 									</Box>
-								</Box>
-							);
-						}
-						if (chat.role === 1) {
-							return (
-								<Box
-									key={chat.id}
-									display="flex"
-									justifyContent="flex-start"
-									mt={2}
-								>
-									<Typography variant="body1">{chat.content}</Typography>
-								</Box>
-							);
-						}
-					})}
+								);
+							}
+						})}
+					</Box>
+					<Box
+						width="100%"
+						maxWidth={640}
+						position="fixed"
+						bottom={20}
+						left="50%"
+						sx={{ transform: "translateX(-50%)" }}
+					>
+						<Paper sx={{ display: "flex" }}>
+							<InputBase
+								sx={{ ml: 2, flex: 1 }}
+								placeholder="思い出を語りましょう"
+								multiline
+								onKeyDown={handleKeyDown}
+								value={message}
+								onChange={(event) => setMessage(event.target.value)}
+							/>
+							<IconButton color="inherit" onClick={handleSubmit}>
+								<ArrowUpwardIcon />
+							</IconButton>
+						</Paper>
+					</Box>
 				</Box>
-				<Box
-					width="100%"
-					maxWidth={640}
-					position="fixed"
-					bottom={20}
-					left="50%"
-					sx={{ transform: "translateX(-50%)" }}
-				>
-					<Paper sx={{ display: "flex" }}>
-						<InputBase
-							sx={{ ml: 2, flex: 1 }}
-							placeholder="思い出を語りましょう"
-							multiline
-							onKeyDown={handleKeyDown}
-							value={message}
-							onChange={(event) => setMessage(event.target.value)}
-						/>
-						<IconButton color="inherit" onClick={handleSubmit}>
-							<ArrowUpwardIcon />
-						</IconButton>
-					</Paper>
-				</Box>
-			</Box>
+			) : (
+				<Typography variant="body1" mt={10}>
+					チャットが存在しません
+				</Typography>
+			)}
 		</>
 	);
 }
