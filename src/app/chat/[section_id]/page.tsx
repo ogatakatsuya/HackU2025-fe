@@ -8,6 +8,7 @@ import { useAppStateContext } from "@/components/Context";
 import { findUserTokenFromCookie } from "@/lib/token";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function Page({ params }: { params: Promise<{ section_id: string }> }) {
@@ -16,6 +17,7 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 	const [view, setView] = useState<boolean>(false);
 	const [chats, setChats] = useState<Chat[] | null>();
 	const [message, setMessage] = useState<string>();
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -49,6 +51,11 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 		);
 	}, [sectionId, user]);
 
+	useEffect(() => {
+		if (!chats) return;
+		router.refresh();
+	}, [chats, router]);
+
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
 			if (event.shiftKey) {
@@ -64,6 +71,16 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 	const handleSubmit = () => {
 		if (message?.trim() && sectionId && chats) {
 			const token = findUserTokenFromCookie();
+
+			const newChat: Chat = {
+				id: Date.now().toString(),
+				content: message.trim(),
+				section: sectionId,
+				role: 0,
+				created_at: new Date().toISOString(),
+			};
+			setChats((prevChats) => [...(prevChats || []), newChat]);
+
 			createChat(
 				{ content: message.trim(), section: sectionId },
 				{ headers: { ...commonHeader({ token: token }) } },
@@ -78,6 +95,7 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 					}
 				});
 			});
+
 			setMessage("");
 		}
 	};
