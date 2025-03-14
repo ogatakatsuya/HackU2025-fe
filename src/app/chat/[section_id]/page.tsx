@@ -155,11 +155,6 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 								);
 							}
 						})}
-						{loading && (
-							<Box display="flex" justifyContent="center" mt={2}>
-								<CircularProgress />
-							</Box>
-						)}
 					</Box>
 					<Box
 						width="100%"
@@ -177,9 +172,14 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 								onKeyDown={handleKeyDown}
 								value={message}
 								onChange={(event) => setMessage(event.target.value)}
+								disabled={loading}
 							/>
-							<IconButton color="inherit" onClick={handleSubmit}>
-								<ArrowUpwardIcon />
+							<IconButton
+								color="inherit"
+								onClick={handleSubmit}
+								disabled={loading}
+							>
+								{loading ? <CircularProgress size={24} /> : <ArrowUpwardIcon />}
 							</IconButton>
 						</Paper>
 					</Box>
