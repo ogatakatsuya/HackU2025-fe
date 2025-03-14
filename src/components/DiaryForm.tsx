@@ -48,12 +48,9 @@ export const DiaryForm = ({
 	const [fileLoading, setFileLoading] = useState(false);
 	const [imageFileBase64, setImageFileBase64] = useState("");
 	const [generatingImage, setGeneratingImage] = useState(false);
+	const [wait, setWait] = useState(false);
 
 	const router = useRouter();
-
-	useEffect(() => {
-		console.log("generatingImage:", generatingImage);
-	}, [generatingImage]);
 
 	useEffect(() => {
 		if (!img || img !== image) return;
@@ -122,10 +119,13 @@ export const DiaryForm = ({
 
 	const handleSubmit = () => {
 		if (fileLoading) return;
-		if (generatingImage) return;
+		if (generatingImage || wait) return;
 		if (!time || !title || !content) return;
+
 		const token = findUserTokenFromCookie();
 		if (!token) return;
+
+		setWait(true);
 
 		if (id) {
 			updateDiary(
@@ -137,12 +137,19 @@ export const DiaryForm = ({
 					image: imageFileBase64,
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ status }) => {
-				if (status === 200) {
-					router.refresh();
-					handleClose();
-				}
-			});
+			)
+				.then(({ status }) => {
+					if (status === 200) {
+						router.refresh();
+						handleClose();
+					}
+					setWait(false);
+				})
+				.catch((error) => {
+					alert("日記の更新に失敗しました");
+					console.error(error);
+					setWait(false);
+				});
 		} else {
 			createDiary(
 				{
@@ -152,12 +159,19 @@ export const DiaryForm = ({
 					image: imageFileBase64,
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ status }) => {
-				if (status === 201) {
-					router.refresh();
-					handleClose();
-				}
-			});
+			)
+				.then(({ status }) => {
+					if (status === 201) {
+						router.refresh();
+						handleClose();
+					}
+					setWait(false);
+				})
+				.catch((error) => {
+					alert("日記の作成に失敗しました");
+					console.error(error);
+					setWait(false);
+				});
 		}
 	};
 
@@ -291,9 +305,10 @@ export const DiaryForm = ({
 				<Button
 					variant="contained"
 					fullWidth
+					disabled={wait}
 					onClick={() => validateInputs() && handleSubmit()}
 				>
-					登録
+					{wait ? "処理中" : "登録"}
 				</Button>
 			</CardActions>
 		</Card>
