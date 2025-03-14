@@ -14,9 +14,9 @@ import { useEffect, useState } from "react";
 
 type ScheduleCardProps = {
 	id: string;
-	title: String;
+	title: string;
 	content: string;
-	handleCheckBox?: (id: String) => void;
+	handleCheckBox?: (id: string) => void;
 
 };
 
@@ -31,22 +31,7 @@ export const ScheduleCard = ({ id, title, content, handleCheckBox }: ScheduleCar
 	}, [content]);
 
 	return (
-		// <Card sx={{ width: 300, height: 250 }}>
-		// 	<CardContent sx={{ height: 60, pt: 0.8 }}>
-		// 		<Typography variant="body1">{summary}</Typography>
-		// 	</CardContent>
-		// </Card>
-		// <Card sx={{ width: 300 }}>
-		// 	<CardContent sx={{ height: 60, pt: 0.8 }}>
-		// 		<Typography variant="h6" component="div">
-		// 			{title}
-		// 		</Typography>
-		// 		<Typography variant="body2" color="text.secondary">
-		// 			{content}
-		// 		</Typography>
-		// 	</CardContent>
-		// </Card>
-		<Card sx={{ display: "flex", alignItems: "center", width: 300 }}>
+		<Card sx={{ display: "flex", alignItems: "center", width: 300, minHeight: 150 }}>
 			{handleCheckBox != null ? <Checkbox onChange={() => handleCheckBox(id)} /> : <></>}
 			< CardContent >
 				<Typography variant="h6">{title}</Typography>
