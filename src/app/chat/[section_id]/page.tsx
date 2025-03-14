@@ -84,16 +84,9 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 			createChat(
 				{ content: message.trim(), section: sectionId },
 				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ status }) => {
+			).then(({ status, data }) => {
 				if (status !== 201) return;
-				findChats(sectionId, {
-					headers: { ...commonHeader({ token: token }) },
-				}).then(({ status, data }) => {
-					if (status === 200) {
-						setChats(data);
-						filterSortChats();
-					}
-				});
+				setChats([...chats, data]);
 			});
 
 			setMessage("");
