@@ -1,6 +1,6 @@
 "use client";
 
-import { suggestSchedules } from "@/api/client";
+import { createSuggestSchedules, suggestSchedules, updateScheduleIsRegistered } from "@/api/client";
 import { createSchedules } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import { findUserTokenFromCookie } from "@/lib/token";
@@ -24,13 +24,17 @@ import ScheduleCard from "@/components/ScheduleCard";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;
+	setShowSuggestForm: () => void;
 };
-import { SucheduleSuggestForm } from "@/components/ScheduleSuggestForm";
-export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
-	const [content, setText] = useState("");
+
+export const submitted = false;
+export const ScheduleSuggestForm = ({
+	date,
+	handleClose,
+}: ScheduleFormProps) => {
+	const [text, setText] = useState("");
+	const [textError, setTextError] = useState(false);
 	const [textErrorMessage, setTextErrorMessage] = useState("");
-	const [suggest_id, setSuggestId] = useState("");
-	const [is_suggested, setIsSuggested] = useState(false);
 	const [suggested_schedules, setSuggestedSchedules] = useState(
 		[] as Schedule[],
 	);
@@ -41,57 +45,53 @@ export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
 	const router = useRouter();
 	const validateInputs = () => {
 		let isValid = true;
-
-		if (!content) {
-			setScheduleSuggestError(true);
-			setScheduleSuggestErrorMessage("テキストを入力してください");
+		if (!text) {
+			setTextError(true);
+			setTextErrorMessage("テキストを入力してください");
 			isValid = false;
 		} else {
-			setScheduleSuggestError(false);
-			setScheduleSuggestErrorMessage("");
+			setTextError(false);
+			setTextErrorMessage("");
 		}
 
 		return isValid;
 	};
-	const handleSuggest = () => {
-		if (validateInputs()) {
-			const token = findUserTokenFromCookie();
-			setSuggestId(uuid_v4());
-			if (!token) return;
-			suggestSchedules(
-				{
-					text: content,
-					date: date,
-					suggest_id: suggest_id,
-				},
-				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ data, status }) => {
-				if (status === 201) {
-					setIsSuggested(true);
-					setSuggestedSchedules(data);
-					router.refresh();
-				}
-			});
-		}
-	};
+	const [idList, setIdList] = useState([] as String[]);
+
+	const registerSchedule = () => {
+		const token = findUserTokenFromCookie();
+		if (!token) return;
+		updateScheduleIsRegistered(
+			idList,
+			{ headers: { ...commonHeader({ token: token }) } },
+		).then(({ status }) => {
+			if (status === 204) {
+				router.refresh();
+			}
+		});
+		handleClose();
+	}
 	const handleSubmit = () => {
 		if (validateInputs()) {
 			const token = findUserTokenFromCookie();
 			if (!token) return;
-			createSchedules(
-				{
-					date: date,
-					content: content,
-				},
+			createSuggestSchedules(
+				text,
 				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ status }) => {
-				if (status === 201) {
+			).then(({ data, status }) => {
+				if (status === 200) {
 					router.refresh();
-					handleClose();
+					setSuggestedSchedules(data);
 				}
 			});
 		}
 	};
+
+	const handleCheckBox = (id: String) => {
+		setIdList((prev) => {
+			return prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+		})
+	}
 
 	return (
 		<Card
@@ -117,14 +117,9 @@ export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
 				<Typography variant="h6" gutterBottom>
 					{date}
 				</Typography>
-				<Box sx={{ textAlign: "center", mt: 10 }}>
-					<Typography component="h1" variant="h4">
-						{date ? date : undefined}
-					</Typography>
-					<SucheduleSuggestForm date={date} />
+				<Box sx={{ textAlign: "center", mt: 3 }}>
 					<Box sx={{ mt: 5, mb: 5 }}>
 						{suggested_schedules &&
-							is_suggested &&
 							suggested_schedules.length > 0 && (
 								<>
 									<Typography component="h1" variant="h4">
@@ -144,8 +139,9 @@ export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
 											<Box width={300} key={schedule.id}>
 												<ScheduleCard
 													id={schedule.id}
+													title={schedule.title}
 													content={schedule.content}
-													date={schedule.date}
+													handleCheckBox={() => handleCheckBox(schedule.id)}
 												/>
 											</Box>
 										))}
@@ -155,38 +151,28 @@ export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
 					</Box>
 				</Box>
 				<TextField
-					label="予定内容"
+					label="提案メッセージ"
 					fullWidth
 					multiline
-					value={content}
+					value={text}
 					onChange={(event) => setText(event.target.value)}
 					error={textError}
 					helperText={textErrorMessage}
 					color={textError ? "error" : "primary"}
 				/>
-				<TextField
-					label="予定提案"
-					fullWidth
-					multiline
-					value={schedule_content}
-					onChange={(event) => setScheduleContent(event.target.value)}
-					error={scheduleSuggestError}
-					helperText={scheduleSuggestErrorMessage}
-					color={scheduleSuggestError ? "error" : "primary"}
-				/>
 			</CardContent>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
-				<Button variant="contained" fullWidth onClick={handleSuggest}>
-					スケジュール生成
+				<Button variant="contained" fullWidth onClick={registerSchedule} disabled={idList.length == 0}>
+					登録する
 				</Button>
 			</CardActions>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
 				<Button variant="contained" fullWidth onClick={handleSubmit}>
-					登録
+					送信する
 				</Button>
 			</CardActions>
 		</Card>
 	);
 };
 
-export default ScheduleForm;
+export default ScheduleSuggestForm;

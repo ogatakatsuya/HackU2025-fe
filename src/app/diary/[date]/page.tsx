@@ -24,12 +24,14 @@ import {
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import ScheduleSuggestForm from "@/components/ScheduleSuggestForm";
 
 function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [diaries, setDiaries] = useState<Diary[] | null>(null);
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const [text, setText] = useState("");
+	const [showSuggestForm, setShowSuggestForm] = useState<boolean>(true);
 	const [openScheduleCreation, setOpenScheduleCreation] =
 		useState<boolean>(false);
 	const [openScheduleSuggestion, setOpenScheduleSuggestion] =
@@ -39,6 +41,11 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const month = dayjs(date).format("MM");
 	const day = dayjs(date).format("DD");
 	const year = dayjs(date).format("YYYY");
+
+	const handleClose = () => {
+		setOpenScheduleCreation(false);
+		setShowSuggestForm(true);
+	}
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
@@ -100,7 +107,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 						<Box sx={{ mt: 5, mb: 5 }}>
 							{schedules &&
 								schedules.filter((schedule) => schedule.date === date).length >
-									0 && (
+								0 && (
 									<>
 										<Typography component="h1" variant="h4">
 											スケジュール
@@ -151,12 +158,13 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 					{date && (
 						<Modal
 							open={openScheduleCreation}
-							onClose={() => setOpenScheduleCreation(false)}
+							onClose={() => handleClose()}
 						>
-							<ScheduleForm
-								date={date}
-								handleClose={() => setOpenScheduleCreation(false)}
-							/>
+							{showSuggestForm ? (
+								<ScheduleForm date={date} handleClose={() => handleClose()} setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)} />
+							) : (
+								<ScheduleSuggestForm date={date} handleClose={() => handleClose()} setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)} />
+							)}
 						</Modal>
 					)}
 					{date && (

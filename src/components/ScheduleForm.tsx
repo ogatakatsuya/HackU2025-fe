@@ -24,15 +24,10 @@ import ScheduleCard from "@/components/ScheduleCard";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;
+	setShowSuggestForm: () => void;
 };
-
-export const submitted = false;
-export const ScheduleSuggestForm = ({
-	date,
-	handleClose,
-}: ScheduleFormProps) => {
+export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: ScheduleFormProps) => {
 	const [content, setText] = useState("");
-	const [textError, setTextError] = useState(false);
 	const [textErrorMessage, setTextErrorMessage] = useState("");
 	const [suggest_id, setSuggestId] = useState("");
 	const [is_suggested, setIsSuggested] = useState(false);
@@ -48,15 +43,6 @@ export const ScheduleSuggestForm = ({
 		let isValid = true;
 
 		if (!content) {
-			setTextError(true);
-			setTextErrorMessage("テキストを入力してください");
-			isValid = false;
-		} else {
-			setTextError(false);
-			setTextErrorMessage("");
-		}
-
-		if (!schedule_content) {
 			setScheduleSuggestError(true);
 			setScheduleSuggestErrorMessage("テキストを入力してください");
 			isValid = false;
@@ -67,26 +53,8 @@ export const ScheduleSuggestForm = ({
 
 		return isValid;
 	};
-	const handleSuggest = () => {
-		if (validateInputs()) {
-			const token = findUserTokenFromCookie();
-			setSuggestId(uuid_v4());
-			if (!token) return;
-			suggestSchedules(
-				{
-					text: content,
-					date: date,
-					suggest_id: suggest_id,
-				},
-				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ data, status }) => {
-				if (status === 201) {
-					setIsSuggested(true);
-					setSuggestedSchedules(data);
-					router.refresh();
-				}
-			});
-		}
+	const moveAISuggest = () => {
+		setShowSuggestForm()
 	};
 	const handleSubmit = () => {
 		if (validateInputs()) {
@@ -101,7 +69,6 @@ export const ScheduleSuggestForm = ({
 			).then(({ status }) => {
 				if (status === 201) {
 					router.refresh();
-					submitted = false;
 					handleClose();
 				}
 			});
@@ -132,54 +99,16 @@ export const ScheduleSuggestForm = ({
 				<Typography variant="h6" gutterBottom>
 					{date}
 				</Typography>
-				<Box sx={{ textAlign: "center", mt: 10 }}>
-					<Typography component="h1" variant="h4">
-						{date ? date : undefined}
-					</Typography>
-					<Box sx={{ mt: 5, mb: 5 }}>
-						{suggested_schedules &&
-							is_suggested &&
-							suggested_schedules.length > 0 && (
-								<>
-									<Typography component="h1" variant="h4">
-										提案されたスケジュール
-									</Typography>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "center",
-											mt: 2,
-											gap: 2,
-											flexWrap: "wrap",
-											width: "100%",
-										}}
-									>
-										{suggested_schedules.map((schedule) => (
-											<Box width={300} key={schedule.id}>
-												<ScheduleCard
-													id={schedule.id}
-													content={schedule.content}
-													date={schedule.date}
-												/>
-											</Box>
-										))}
-									</Box>
-								</>
-							)}
-					</Box>
-				</Box>
 				<TextField
-					label="予定内容"
+					label="タイトル"
 					fullWidth
 					multiline
 					value={content}
 					onChange={(event) => setText(event.target.value)}
-					error={textError}
 					helperText={textErrorMessage}
-					color={textError ? "error" : "primary"}
 				/>
 				<TextField
-					label="予定提案"
+					label="内容"
 					fullWidth
 					multiline
 					value={schedule_content}
@@ -190,8 +119,8 @@ export const ScheduleSuggestForm = ({
 				/>
 			</CardContent>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
-				<Button variant="contained" fullWidth onClick={handleSuggest}>
-					スケジュール生成
+				<Button variant="contained" fullWidth onClick={moveAISuggest}>
+					AIに依頼する
 				</Button>
 			</CardActions>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
