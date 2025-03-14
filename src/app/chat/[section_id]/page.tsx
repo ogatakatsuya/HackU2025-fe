@@ -7,6 +7,7 @@ import type { Section } from "@/api/schemas/section";
 import { useAppStateContext } from "@/components/Context";
 import { findUserTokenFromCookie } from "@/lib/token";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 	const [view, setView] = useState<boolean>(false);
 	const [chats, setChats] = useState<Chat[] | null>();
 	const [message, setMessage] = useState<string>();
+	const [loading, setLoading] = useState<boolean>(false);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -80,13 +82,16 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 				created_at: new Date().toISOString(),
 			};
 			setChats((prevChats) => [...(prevChats || []), newChat]);
+			setLoading(true);
 
 			createChat(
 				{ content: message.trim(), section: sectionId },
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ status, data }) => {
+				setLoading(false);
 				if (status !== 201) return;
-				setChats([...chats, data]);
+				setChats([...chats, newChat, data]); //会話＋返答を会話履歴に挿入
+				router.push(`/chat/${sectionId}`);
 			});
 
 			setMessage("");
@@ -150,6 +155,11 @@ function Page({ params }: { params: Promise<{ section_id: string }> }) {
 								);
 							}
 						})}
+						{loading && (
+							<Box display="flex" justifyContent="center" mt={2}>
+								<CircularProgress />
+							</Box>
+						)}
 					</Box>
 					<Box
 						width="100%"
