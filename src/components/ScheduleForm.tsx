@@ -1,8 +1,11 @@
 "use client";
 
+import { title } from "node:process";
 import { suggestSchedules } from "@/api/client";
 import { createSchedules } from "@/api/client";
 import { commonHeader } from "@/api/custom";
+import type { Schedule } from "@/api/schemas/schedule";
+import ScheduleCard from "@/components/ScheduleCard";
 import { findUserTokenFromCookie } from "@/lib/token";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -19,9 +22,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { v4 as uuid_v4 } from "uuid";
-import type { Schedule } from "@/api/schemas/schedule";
-import ScheduleCard from "@/components/ScheduleCard";
-import { title } from "node:process";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;

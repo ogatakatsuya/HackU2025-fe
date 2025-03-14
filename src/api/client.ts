@@ -12,10 +12,10 @@ import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
 import type { Section } from "./schemas/section";
+import type { SuggestSchedulesReq } from "./schemas/suggestSchedulesReq";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-import type { SuggestSchedulesReq } from "./schemas/suggestSchedulesReq";
 export type createUserResponse = {
 	data: UserResp;
 	status: number;

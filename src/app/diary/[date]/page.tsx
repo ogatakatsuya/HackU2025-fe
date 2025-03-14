@@ -9,10 +9,11 @@ import { DiaryForm } from "@/components/DiaryForm";
 import Header from "@/components/Header";
 import ScheduleCard from "@/components/ScheduleCard";
 import ScheduleForm from "@/components/ScheduleForm";
+import ScheduleSuggestForm from "@/components/ScheduleSuggestForm";
 import { findUserTokenFromCookie } from "@/lib/token";
+import AddTaskIcon from "@mui/icons-material/AddTask";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import AddTaskIcon from "@mui/icons-material/AddTask";
 import {
 	Box,
 	Modal,
@@ -24,7 +25,6 @@ import {
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import ScheduleSuggestForm from "@/components/ScheduleSuggestForm";
 
 function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [diaries, setDiaries] = useState<Diary[] | null>(null);
