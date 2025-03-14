@@ -120,7 +120,7 @@ export type createSchedulesResponse = {
 	headers: Headers;
 };
 export const getCreateScheduleUrl = () => {
-	return "api/schedule/suggest";
+	return "api/schedule/";
 };
 export const createSchedules = async (
 	createScheduleReq: CreateSchedulesReq,
@@ -135,7 +135,7 @@ export const createSchedules = async (
 };
 
 export const updateScheduleIsRegistered = async (
-	idList: String[],
+	idList: string[],
 	options?: RequestInit,
 ): Promise<createSchedulesResponse> => {
 	const url = `${getFindSchedulesUrl()}bulk-register/`;
@@ -172,7 +172,8 @@ export const findSchedules = async (
 };
 
 export const createSuggestSchedules = async (
-	text: String,
+	text: string,
+	date: string,
 	options?: RequestInit,
 ): Promise<createSchedulesResponse> => {
 	const url = `${getFindSchedulesUrl()}suggest/`;
@@ -180,7 +181,7 @@ export const createSuggestSchedules = async (
 		...options,
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify({ text: text }),
+		body: JSON.stringify({ text: text, date: date }),
 	});
 };
 
