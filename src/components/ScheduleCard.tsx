@@ -43,7 +43,7 @@ export const ScheduleCard = ({
 			) : (
 				<></>
 			)}
-			<CardContent>
+			<CardContent sx={{ flexGrow: 1 }}>
 				<Typography variant="h6">{title}</Typography>
 				<Typography variant="body2" color="text.secondary">
 					{content}
