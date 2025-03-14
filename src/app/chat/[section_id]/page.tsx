@@ -7,8 +7,8 @@ import type { Section } from "@/api/schemas/section";
 import { useAppStateContext } from "@/components/Context";
 import { findUserTokenFromCookie } from "@/lib/token";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Box, IconButton, InputBase, Paper, Typography } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
