@@ -21,7 +21,7 @@ import { useState } from "react";
 import { v4 as uuid_v4 } from "uuid";
 import type { Schedule } from "@/api/schemas/schedule";
 import ScheduleCard from "@/components/ScheduleCard";
-import { title } from "process";
+import { title } from "node:process";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;

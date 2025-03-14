@@ -162,7 +162,7 @@ export const ScheduleSuggestForm = ({
 				/>
 			</CardContent>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
-				<Button variant="contained" fullWidth onClick={registerSchedule} disabled={idList.length == 0}>
+				<Button variant="contained" fullWidth onClick={registerSchedule} disabled={idList.length === 0}>
 					登録する
 				</Button>
 			</CardActions>
