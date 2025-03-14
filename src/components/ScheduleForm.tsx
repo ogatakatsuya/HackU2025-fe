@@ -21,13 +21,14 @@ import { useState } from "react";
 import { v4 as uuid_v4 } from "uuid";
 import type { Schedule } from "@/api/schemas/schedule";
 import ScheduleCard from "@/components/ScheduleCard";
+import { title } from "process";
 type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;
 	setShowSuggestForm: () => void;
 };
 export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: ScheduleFormProps) => {
-	const [content, setText] = useState("");
+	const [title, setText] = useState("");
 	const [textErrorMessage, setTextErrorMessage] = useState("");
 	const [suggest_id, setSuggestId] = useState("");
 	const [is_suggested, setIsSuggested] = useState(false);
@@ -42,7 +43,7 @@ export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: Schedule
 	const validateInputs = () => {
 		let isValid = true;
 
-		if (!content) {
+		if (!title) {
 			setScheduleSuggestError(true);
 			setScheduleSuggestErrorMessage("テキストを入力してください");
 			isValid = false;
@@ -63,7 +64,8 @@ export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: Schedule
 			createSchedules(
 				{
 					date: date,
-					content: content,
+					title: title,
+					content: schedule_content,
 				},
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ status }) => {
@@ -103,7 +105,7 @@ export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: Schedule
 					label="タイトル"
 					fullWidth
 					multiline
-					value={content}
+					value={title}
 					onChange={(event) => setText(event.target.value)}
 					helperText={textErrorMessage}
 				/>

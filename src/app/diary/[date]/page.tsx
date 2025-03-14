@@ -128,8 +128,8 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 													<Box width={300} key={schedule.id}>
 														<ScheduleCard
 															id={schedule.id}
+															title={schedule.title}
 															content={schedule.content}
-															date={schedule.date}
 														/>
 													</Box>
 												))}

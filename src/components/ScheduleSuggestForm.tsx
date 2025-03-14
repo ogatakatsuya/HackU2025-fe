@@ -56,7 +56,7 @@ export const ScheduleSuggestForm = ({
 
 		return isValid;
 	};
-	const [idList, setIdList] = useState([] as String[]);
+	const [idList, setIdList] = useState([] as string[]);
 
 	const registerSchedule = () => {
 		const token = findUserTokenFromCookie();
@@ -76,7 +76,7 @@ export const ScheduleSuggestForm = ({
 			const token = findUserTokenFromCookie();
 			if (!token) return;
 			createSuggestSchedules(
-				text,
+				text, date,
 				{ headers: { ...commonHeader({ token: token }) } },
 			).then(({ data, status }) => {
 				if (status === 200) {
@@ -87,7 +87,7 @@ export const ScheduleSuggestForm = ({
 		}
 	};
 
-	const handleCheckBox = (id: String) => {
+	const handleCheckBox = (id: string) => {
 		setIdList((prev) => {
 			return prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
 		})
