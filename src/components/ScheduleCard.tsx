@@ -17,10 +17,14 @@ type ScheduleCardProps = {
 	title: string;
 	content: string;
 	handleCheckBox?: (id: string) => void;
-
 };
 
-export const ScheduleCard = ({ id, title, content, handleCheckBox }: ScheduleCardProps) => {
+export const ScheduleCard = ({
+	id,
+	title,
+	content,
+	handleCheckBox,
+}: ScheduleCardProps) => {
 	const [summary, setSummary] = useState("");
 	useEffect(() => {
 		if (content.length > 30) {
@@ -31,15 +35,21 @@ export const ScheduleCard = ({ id, title, content, handleCheckBox }: ScheduleCar
 	}, [content]);
 
 	return (
-		<Card sx={{ display: "flex", alignItems: "center", width: 300, minHeight: 150 }}>
-			{handleCheckBox != null ? <Checkbox onChange={() => handleCheckBox(id)} /> : <></>}
-			< CardContent >
+		<Card
+			sx={{ display: "flex", alignItems: "center", width: 300, minHeight: 150 }}
+		>
+			{handleCheckBox != null ? (
+				<Checkbox onChange={() => handleCheckBox(id)} />
+			) : (
+				<></>
+			)}
+			<CardContent>
 				<Typography variant="h6">{title}</Typography>
 				<Typography variant="body2" color="text.secondary">
 					{content}
 				</Typography>
 			</CardContent>
-		</Card >
+		</Card>
 	);
 };
 

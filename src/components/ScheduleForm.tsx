@@ -27,7 +27,11 @@ type ScheduleFormProps = {
 	handleClose: () => void;
 	setShowSuggestForm: () => void;
 };
-export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: ScheduleFormProps) => {
+export const ScheduleForm = ({
+	date,
+	handleClose,
+	setShowSuggestForm,
+}: ScheduleFormProps) => {
 	const [title, setText] = useState("");
 	const [textErrorMessage, setTextErrorMessage] = useState("");
 	const [suggest_id, setSuggestId] = useState("");
@@ -55,7 +59,7 @@ export const ScheduleForm = ({ date, handleClose, setShowSuggestForm }: Schedule
 		return isValid;
 	};
 	const moveAISuggest = () => {
-		setShowSuggestForm()
+		setShowSuggestForm();
 	};
 	const handleSubmit = () => {
 		if (validateInputs()) {

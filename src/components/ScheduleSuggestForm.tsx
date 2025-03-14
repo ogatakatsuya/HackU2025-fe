@@ -1,6 +1,10 @@
 "use client";
 
-import { createSuggestSchedules, suggestSchedules, updateScheduleIsRegistered } from "@/api/client";
+import {
+	createSuggestSchedules,
+	suggestSchedules,
+	updateScheduleIsRegistered,
+} from "@/api/client";
 import { createSchedules } from "@/api/client";
 import { commonHeader } from "@/api/custom";
 import { findUserTokenFromCookie } from "@/lib/token";
@@ -61,24 +65,22 @@ export const ScheduleSuggestForm = ({
 	const registerSchedule = () => {
 		const token = findUserTokenFromCookie();
 		if (!token) return;
-		updateScheduleIsRegistered(
-			idList,
-			{ headers: { ...commonHeader({ token: token }) } },
-		).then(({ status }) => {
+		updateScheduleIsRegistered(idList, {
+			headers: { ...commonHeader({ token: token }) },
+		}).then(({ status }) => {
 			if (status === 204) {
 				router.refresh();
 			}
 		});
 		handleClose();
-	}
+	};
 	const handleSubmit = () => {
 		if (validateInputs()) {
 			const token = findUserTokenFromCookie();
 			if (!token) return;
-			createSuggestSchedules(
-				text, date,
-				{ headers: { ...commonHeader({ token: token }) } },
-			).then(({ data, status }) => {
+			createSuggestSchedules(text, date, {
+				headers: { ...commonHeader({ token: token }) },
+			}).then(({ data, status }) => {
 				if (status === 200) {
 					router.refresh();
 					setSuggestedSchedules(data);
@@ -89,9 +91,11 @@ export const ScheduleSuggestForm = ({
 
 	const handleCheckBox = (id: string) => {
 		setIdList((prev) => {
-			return prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-		})
-	}
+			return prev.includes(id)
+				? prev.filter((item) => item !== id)
+				: [...prev, id];
+		});
+	};
 
 	return (
 		<Card
@@ -119,35 +123,34 @@ export const ScheduleSuggestForm = ({
 				</Typography>
 				<Box sx={{ textAlign: "center", mt: 3 }}>
 					<Box sx={{ mt: 5, mb: 5 }}>
-						{suggested_schedules &&
-							suggested_schedules.length > 0 && (
-								<>
-									<Typography component="h1" variant="h4">
-										提案されたスケジュール
-									</Typography>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "center",
-											mt: 2,
-											gap: 2,
-											flexWrap: "wrap",
-											width: "100%",
-										}}
-									>
-										{suggested_schedules.map((schedule) => (
-											<Box width={300} key={schedule.id}>
-												<ScheduleCard
-													id={schedule.id}
-													title={schedule.title}
-													content={schedule.content}
-													handleCheckBox={() => handleCheckBox(schedule.id)}
-												/>
-											</Box>
-										))}
-									</Box>
-								</>
-							)}
+						{suggested_schedules && suggested_schedules.length > 0 && (
+							<>
+								<Typography component="h1" variant="h4">
+									提案されたスケジュール
+								</Typography>
+								<Box
+									sx={{
+										display: "flex",
+										justifyContent: "center",
+										mt: 2,
+										gap: 2,
+										flexWrap: "wrap",
+										width: "100%",
+									}}
+								>
+									{suggested_schedules.map((schedule) => (
+										<Box width={300} key={schedule.id}>
+											<ScheduleCard
+												id={schedule.id}
+												title={schedule.title}
+												content={schedule.content}
+												handleCheckBox={() => handleCheckBox(schedule.id)}
+											/>
+										</Box>
+									))}
+								</Box>
+							</>
+						)}
 					</Box>
 				</Box>
 				<TextField
@@ -162,7 +165,12 @@ export const ScheduleSuggestForm = ({
 				/>
 			</CardContent>
 			<CardActions sx={{ display: "flex", justifyContent: "center" }}>
-				<Button variant="contained" fullWidth onClick={registerSchedule} disabled={idList.length === 0}>
+				<Button
+					variant="contained"
+					fullWidth
+					onClick={registerSchedule}
+					disabled={idList.length === 0}
+				>
 					登録する
 				</Button>
 			</CardActions>

@@ -45,7 +45,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const handleClose = () => {
 		setOpenScheduleCreation(false);
 		setShowSuggestForm(true);
-	}
+	};
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
@@ -107,7 +107,7 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 						<Box sx={{ mt: 5, mb: 5 }}>
 							{schedules &&
 								schedules.filter((schedule) => schedule.date === date).length >
-								0 && (
+									0 && (
 									<>
 										<Typography component="h1" variant="h4">
 											スケジュール
@@ -156,14 +156,19 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 					</SpeedDial>
 
 					{date && (
-						<Modal
-							open={openScheduleCreation}
-							onClose={() => handleClose()}
-						>
+						<Modal open={openScheduleCreation} onClose={() => handleClose()}>
 							{showSuggestForm ? (
-								<ScheduleForm date={date} handleClose={() => handleClose()} setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)} />
+								<ScheduleForm
+									date={date}
+									handleClose={() => handleClose()}
+									setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)}
+								/>
 							) : (
-								<ScheduleSuggestForm date={date} handleClose={() => handleClose()} setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)} />
+								<ScheduleSuggestForm
+									date={date}
+									handleClose={() => handleClose()}
+									setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)}
+								/>
 							)}
 						</Modal>
 					)}
