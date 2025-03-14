@@ -134,6 +134,19 @@ export const createSchedules = async (
 	});
 };
 
+export const updateScheduleIsRegistered = async (
+	idList: String[],
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	const url = `${getFindSchedulesUrl()}bulk-register/`;
+	return fetch2<Promise<createSchedulesResponse>>(url, {
+		...options,
+		method: "PATCH",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify({ ids: idList }),
+	});
+};
+
 export type findSchedulesResponse = {
 	data: Schedule[];
 	status: number;
@@ -155,6 +168,19 @@ export const findSchedules = async (
 		...options,
 		method: "GET",
 		headers: { ...options?.headers },
+	});
+};
+
+export const createSuggestSchedules = async (
+	text: String,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	const url = `${getFindSchedulesUrl()}suggest/`;
+	return fetch2<Promise<createSchedulesResponse>>(url, {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify({ text: text }),
 	});
 };
 
