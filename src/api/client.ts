@@ -12,10 +12,10 @@ import type { ImageResp } from "./schemas/imageResp";
 import type { LoginUserReq } from "./schemas/loginUserReq";
 import type { Schedule } from "./schemas/schedule";
 import type { Section } from "./schemas/section";
+import type { SuggestSchedulesReq } from "./schemas/suggestSchedulesReq";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -94,6 +94,26 @@ export const logoutUser = async (options?: RequestInit) => {
 	});
 };
 
+export type suggestSchedulesResponse = {
+	data: Schedule[];
+	status: number;
+	headers: Headers;
+};
+export const getSuggestScheduleUrl = () => {
+	return "api/schedule/";
+};
+export const suggestSchedules = async (
+	suggestScheduleReq: SuggestSchedulesReq,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	return fetch2<Promise<suggestSchedulesResponse>>(getSuggestScheduleUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(suggestScheduleReq),
+	});
+};
+
 export type createSchedulesResponse = {
 	data: Schedule[];
 	status: number;
@@ -111,6 +131,19 @@ export const createSchedules = async (
 		method: "POST",
 		headers: { "Content-Type": "application/json", ...options?.headers },
 		body: JSON.stringify(createScheduleReq),
+	});
+};
+
+export const updateScheduleIsRegistered = async (
+	idList: string[],
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	const url = `${getFindSchedulesUrl()}bulk-register/`;
+	return fetch2<Promise<createSchedulesResponse>>(url, {
+		...options,
+		method: "PATCH",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify({ ids: idList }),
 	});
 };
 
@@ -135,6 +168,20 @@ export const findSchedules = async (
 		...options,
 		method: "GET",
 		headers: { ...options?.headers },
+	});
+};
+
+export const createSuggestSchedules = async (
+	text: string,
+	date: string,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	const url = `${getFindSchedulesUrl()}suggest/`;
+	return fetch2<Promise<createSchedulesResponse>>(url, {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify({ text: text, date: date }),
 	});
 };
 

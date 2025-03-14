@@ -9,7 +9,9 @@ import { DiaryForm } from "@/components/DiaryForm";
 import Header from "@/components/Header";
 import ScheduleCard from "@/components/ScheduleCard";
 import ScheduleForm from "@/components/ScheduleForm";
+import ScheduleSuggestForm from "@/components/ScheduleSuggestForm";
 import { findUserTokenFromCookie } from "@/lib/token";
+import AddTaskIcon from "@mui/icons-material/AddTask";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import {
@@ -29,12 +31,21 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const [text, setText] = useState("");
-	const [openTextField, setOpenTextField] = useState<boolean>(false);
+	const [showSuggestForm, setShowSuggestForm] = useState<boolean>(true);
+	const [openScheduleCreation, setOpenScheduleCreation] =
+		useState<boolean>(false);
+	const [openScheduleSuggestion, setOpenScheduleSuggestion] =
+		useState<boolean>(false);
 	const [view, setView] = useState(false);
 	const [schedules, setSchedules] = useState<Schedule[] | null>(null);
 	const month = dayjs(date).format("MM");
 	const day = dayjs(date).format("DD");
 	const year = dayjs(date).format("YYYY");
+
+	const handleClose = () => {
+		setOpenScheduleCreation(false);
+		setShowSuggestForm(true);
+	};
 	useEffect(() => {
 		const fetchData = async () => {
 			const resolvedParams = await params;
@@ -117,8 +128,8 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 													<Box width={300} key={schedule.id}>
 														<ScheduleCard
 															id={schedule.id}
+															title={schedule.title}
 															content={schedule.content}
-															date={schedule.date}
 														/>
 													</Box>
 												))}
@@ -138,18 +149,27 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 							title="新規作成"
 						/>
 						<SpeedDialAction
-							onClick={() => setOpenTextField(true)}
-							icon={<SmartToyIcon />}
+							onClick={() => setOpenScheduleCreation(true)}
+							icon={<AddTaskIcon />}
 							title="予定生成"
 						/>
 					</SpeedDial>
 
 					{date && (
-						<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
-							<ScheduleForm
-								date={date}
-								handleClose={() => setOpenTextField(false)}
-							/>
+						<Modal open={openScheduleCreation} onClose={() => handleClose()}>
+							{showSuggestForm ? (
+								<ScheduleForm
+									date={date}
+									handleClose={() => handleClose()}
+									setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)}
+								/>
+							) : (
+								<ScheduleSuggestForm
+									date={date}
+									handleClose={() => handleClose()}
+									setShowSuggestForm={() => setShowSuggestForm((prev) => !prev)}
+								/>
+							)}
 						</Modal>
 					)}
 					{date && (

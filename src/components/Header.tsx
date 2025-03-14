@@ -42,7 +42,7 @@ export const Header = () => {
 					<Box sx={{ flexGrow: 1 }}>
 						<Button color="inherit" onClick={() => router.push("/")}>
 							<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-								おもえも(仮)
+								おもえも
 							</Typography>
 						</Button>
 					</Box>
