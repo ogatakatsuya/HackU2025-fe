@@ -15,7 +15,7 @@ import type { Section } from "./schemas/section";
 import type { UpdateDiaryReq } from "./schemas/updateDiaryReq";
 import type { User } from "./schemas/user";
 import type { UserResp } from "./schemas/userResp";
-
+import type { SuggestSchedulesReq } from "./schemas/suggestSchedulesReq";
 export type createUserResponse = {
 	data: UserResp;
 	status: number;
@@ -94,13 +94,33 @@ export const logoutUser = async (options?: RequestInit) => {
 	});
 };
 
+export type suggestSchedulesResponse = {
+	data: Schedule[];
+	status: number;
+	headers: Headers;
+};
+export const getSuggestScheduleUrl = () => {
+	return "api/schedule/";
+};
+export const suggestSchedules = async (
+	suggestScheduleReq: SuggestSchedulesReq,
+	options?: RequestInit,
+): Promise<createSchedulesResponse> => {
+	return fetch2<Promise<suggestSchedulesResponse>>(getSuggestScheduleUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(suggestScheduleReq),
+	});
+};
+
 export type createSchedulesResponse = {
 	data: Schedule[];
 	status: number;
 	headers: Headers;
 };
 export const getCreateScheduleUrl = () => {
-	return "api/schedule/";
+	return "api/schedule/suggest";
 };
 export const createSchedules = async (
 	createScheduleReq: CreateSchedulesReq,

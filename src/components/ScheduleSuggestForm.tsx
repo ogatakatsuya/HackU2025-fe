@@ -25,14 +25,9 @@ type ScheduleFormProps = {
 	date: string;
 	handleClose: () => void;
 };
-
-export const submitted = false;
-export const ScheduleSuggestForm = ({
-	date,
-	handleClose,
-}: ScheduleFormProps) => {
+import { SucheduleSuggestForm } from "@/components/ScheduleSuggestForm";
+export const ScheduleForm = ({ date, handleClose }: ScheduleFormProps) => {
 	const [content, setText] = useState("");
-	const [textError, setTextError] = useState(false);
 	const [textErrorMessage, setTextErrorMessage] = useState("");
 	const [suggest_id, setSuggestId] = useState("");
 	const [is_suggested, setIsSuggested] = useState(false);
@@ -48,15 +43,6 @@ export const ScheduleSuggestForm = ({
 		let isValid = true;
 
 		if (!content) {
-			setTextError(true);
-			setTextErrorMessage("テキストを入力してください");
-			isValid = false;
-		} else {
-			setTextError(false);
-			setTextErrorMessage("");
-		}
-
-		if (!schedule_content) {
 			setScheduleSuggestError(true);
 			setScheduleSuggestErrorMessage("テキストを入力してください");
 			isValid = false;
@@ -101,7 +87,6 @@ export const ScheduleSuggestForm = ({
 			).then(({ status }) => {
 				if (status === 201) {
 					router.refresh();
-					submitted = false;
 					handleClose();
 				}
 			});
@@ -136,6 +121,7 @@ export const ScheduleSuggestForm = ({
 					<Typography component="h1" variant="h4">
 						{date ? date : undefined}
 					</Typography>
+					<SucheduleSuggestForm date={date} />
 					<Box sx={{ mt: 5, mb: 5 }}>
 						{suggested_schedules &&
 							is_suggested &&

@@ -12,6 +12,7 @@ import ScheduleForm from "@/components/ScheduleForm";
 import { findUserTokenFromCookie } from "@/lib/token";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import AddTaskIcon from "@mui/icons-material/AddTask";
 import {
 	Box,
 	Modal,
@@ -29,7 +30,10 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 	const [date, setDate] = useState<string | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 	const [text, setText] = useState("");
-	const [openTextField, setOpenTextField] = useState<boolean>(false);
+	const [openScheduleCreation, setOpenScheduleCreation] =
+		useState<boolean>(false);
+	const [openScheduleSuggestion, setOpenScheduleSuggestion] =
+		useState<boolean>(false);
 	const [view, setView] = useState(false);
 	const [schedules, setSchedules] = useState<Schedule[] | null>(null);
 	const month = dayjs(date).format("MM");
@@ -138,17 +142,20 @@ function Page({ params }: { params: Promise<{ date: string }> }) {
 							title="新規作成"
 						/>
 						<SpeedDialAction
-							onClick={() => setOpenTextField(true)}
-							icon={<SmartToyIcon />}
+							onClick={() => setOpenScheduleCreation(true)}
+							icon={<AddTaskIcon />}
 							title="予定生成"
 						/>
 					</SpeedDial>
 
 					{date && (
-						<Modal open={openTextField} onClose={() => setOpenTextField(false)}>
+						<Modal
+							open={openScheduleCreation}
+							onClose={() => setOpenScheduleCreation(false)}
+						>
 							<ScheduleForm
 								date={date}
-								handleClose={() => setOpenTextField(false)}
+								handleClose={() => setOpenScheduleCreation(false)}
 							/>
 						</Modal>
 					)}
